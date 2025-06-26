@@ -1,2 +1,2 @@
-# qwen-code
-Qwen-code is a coding agent that lives in digital world
+# Qwen Code
+Qwen Code is a coding agent that lives in digital world
