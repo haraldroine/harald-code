@@ -44,9 +44,17 @@ npm install -g .
 
 ### API Configuration
 
-Set your Qwen API key (In Qwen Code project, you can also set your API key in `.env` file):
+Set your Qwen API key (In Qwen Code project, you can also set your API key in `.env` file). the `.env` file should be placed in the root directory of your current project.
+
+> ⚠️ **Notice:** <br>
+> **If you are in mainland China, please go to https://bailian.console.aliyun.com/ to apply for your API key** <br>
+> **If you are not in mainland China, please go to https://modelstudio.console.alibabacloud.com/ to apply for your API key**
 
 ```bash
+# If you are in mainland China, use the following URL:
+# https://dashscope.aliyuncs.com/compatible-mode/v1
+# If you are not in mainland China, use the following URL:
+# https://dashscope-intl.aliyuncs.com/compatible-mode/v1
 export OPENAI_API_KEY="your_api_key_here"
 export OPENAI_BASE_URL="your_api_base_url_here"
 export OPENAI_MODEL="your_api_model_here"
