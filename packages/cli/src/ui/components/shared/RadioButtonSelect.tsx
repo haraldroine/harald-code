@@ -56,7 +56,12 @@ export function RadioButtonSelect<T>({
   showScrollArrows = false,
   maxItemsToShow = 10,
 }: RadioButtonSelectProps<T>): React.JSX.Element {
-  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  // Ensure initialIndex is within bounds
+  const safeInitialIndex =
+    items.length > 0
+      ? Math.max(0, Math.min(initialIndex, items.length - 1))
+      : 0;
+  const [activeIndex, setActiveIndex] = useState(safeInitialIndex);
   const [scrollOffset, setScrollOffset] = useState(0);
 
   // Ensure activeIndex is always within bounds when items change
@@ -102,7 +107,11 @@ export function RadioButtonSelect<T>({
       }
       if (key.return) {
         // Add bounds check before accessing items[activeIndex]
-        if (activeIndex >= 0 && activeIndex < items.length && items[activeIndex]) {
+        if (
+          activeIndex >= 0 &&
+          activeIndex < items.length &&
+          items[activeIndex]
+        ) {
           onSelect(items[activeIndex].value);
         }
       }
@@ -118,7 +127,13 @@ export function RadioButtonSelect<T>({
         }
       }
     },
-    { isActive: isFocused && items.length > 0 && activeIndex >= 0 && activeIndex < items.length },
+    {
+      isActive:
+        isFocused &&
+        items.length > 0 &&
+        activeIndex >= 0 &&
+        activeIndex < items.length,
+    },
   );
 
   const visibleItems = items.slice(scrollOffset, scrollOffset + maxItemsToShow);
