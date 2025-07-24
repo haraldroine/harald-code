@@ -300,6 +300,7 @@ export class OpenAIContentGenerator implements ContentGenerator {
         messages,
         ...samplingParams,
         stream: true,
+        stream_options: { include_usage: true },
       };
 
       if (request.config?.tools) {
