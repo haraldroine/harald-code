@@ -18,7 +18,35 @@ import process from 'node:process';
 import { isGitRepository } from '../utils/gitUtils.js';
 import { MemoryTool, GEMINI_CONFIG_DIR } from '../tools/memoryTool.js';
 
-export function getCoreSystemPrompt(userMemory?: string): string {
+export interface ModelTemplateMapping {
+  baseUrls?: string[];
+  modelNames?: string[];
+  template?: string;
+}
+
+export interface SystemPromptConfig {
+  systemPromptMappings?: ModelTemplateMapping[];
+}
+
+/**
+ * Normalizes a URL by removing trailing slash for consistent comparison
+ */
+function normalizeUrl(url: string): string {
+  return url.endsWith('/') ? url.slice(0, -1) : url;
+}
+
+/**
+ * Checks if a URL matches any URL in the array, ignoring trailing slashes
+ */
+function urlMatches(urlArray: string[], targetUrl: string): boolean {
+  const normalizedTarget = normalizeUrl(targetUrl);
+  return urlArray.some((url) => normalizeUrl(url) === normalizedTarget);
+}
+
+export function getCoreSystemPrompt(
+  userMemory?: string,
+  config?: SystemPromptConfig,
+): string {
   // if GEMINI_SYSTEM_MD is set (and not 0|false), override system prompt from file
   // default path is .qwen/system.md but can be modified via custom path in GEMINI_SYSTEM_MD
   let systemMdEnabled = false;
@@ -34,6 +62,52 @@ export function getCoreSystemPrompt(userMemory?: string): string {
       throw new Error(`missing system prompt file '${systemMdPath}'`);
     }
   }
+
+  // Check for system prompt mappings from global config
+  if (config?.systemPromptMappings) {
+    const currentModel = process.env.OPENAI_MODEL || '';
+    const currentBaseUrl = process.env.OPENAI_BASE_URL || '';
+
+    const matchedMapping = config.systemPromptMappings.find((mapping) => {
+      const { baseUrls, modelNames } = mapping;
+      // Check if baseUrl matches (when specified)
+      if (
+        baseUrls &&
+        modelNames &&
+        urlMatches(baseUrls, currentBaseUrl) &&
+        modelNames.includes(currentModel)
+      ) {
+        return true;
+      }
+
+      if (baseUrls && urlMatches(baseUrls, currentBaseUrl) && !modelNames) {
+        return true;
+      }
+      if (modelNames && modelNames.includes(currentModel) && !baseUrls) {
+        return true;
+      }
+
+      return false;
+    });
+
+    if (matchedMapping?.template) {
+      const isGitRepo = isGitRepository(process.cwd());
+
+      // Replace placeholders in template
+      let template = matchedMapping.template;
+      template = template.replace(
+        '{RUNTIME_VARS_IS_GIT_REPO}',
+        String(isGitRepo),
+      );
+      template = template.replace(
+        '{RUNTIME_VARS_SANDBOX}',
+        process.env.SANDBOX || '',
+      );
+
+      return template;
+    }
+  }
+
   const basePrompt = systemMdEnabled
     ? fs.readFileSync(systemMdPath, 'utf8')
     : `
@@ -256,6 +330,7 @@ Your core function is efficient and safe assistance. Balance extreme conciseness
 `.trim();
 
   // if GEMINI_WRITE_SYSTEM_MD is set (and not 0|false), write base system prompt to file
+
   const writeSystemMdVar = process.env.GEMINI_WRITE_SYSTEM_MD?.toLowerCase();
   if (writeSystemMdVar && !['0', 'false'].includes(writeSystemMdVar)) {
     if (['1', 'true'].includes(writeSystemMdVar)) {
