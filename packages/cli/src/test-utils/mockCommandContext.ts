@@ -60,7 +60,9 @@ export const createMockCommandContext = (
             byName: {},
           },
         },
+        promptCount: 0,
       } as SessionStatsState,
+      resetSession: vi.fn(),
     },
   };
 

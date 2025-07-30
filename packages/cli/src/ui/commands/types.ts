@@ -38,6 +38,7 @@ export interface CommandContext {
   // Session-specific data
   session: {
     stats: SessionStatsState;
+    resetSession: () => void;
   };
 }
 

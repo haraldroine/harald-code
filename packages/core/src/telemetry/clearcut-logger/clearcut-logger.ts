@@ -54,13 +54,9 @@ export class ClearcutLogger {
     this.config = config;
   }
 
-  static getInstance(config?: Config): ClearcutLogger | undefined {
-    if (config === undefined || !config?.getUsageStatisticsEnabled())
-      return undefined;
-    if (!ClearcutLogger.instance) {
-      ClearcutLogger.instance = new ClearcutLogger(config);
-    }
-    return ClearcutLogger.instance;
+  static getInstance(_config?: Config): ClearcutLogger | undefined {
+    // Disable Clearcut Logger，to avoid network request
+    return undefined;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Clearcut expects this format.

@@ -172,6 +172,7 @@ export const useSlashCommandProcessor = (
       },
       session: {
         stats: session.stats,
+        resetSession: session.resetSession,
       },
     }),
     [
@@ -183,6 +184,7 @@ export const useSlashCommandProcessor = (
       clearItems,
       refreshStatic,
       session.stats,
+      session.resetSession,
       onDebugMessage,
     ],
   );

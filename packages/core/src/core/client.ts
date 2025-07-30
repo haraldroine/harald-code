@@ -167,6 +167,7 @@ export class GeminiClient {
     const platform = process.platform;
     const folderStructure = await getFolderStructure(cwd, {
       fileService: this.config.getFileService(),
+      maxItems: this.config.getMaxFolderItems(),
     });
     const context = `
   This is the Qwen Code. We are setting up the context for our chat.
@@ -305,6 +306,49 @@ export class GeminiClient {
 
     if (compressed) {
       yield { type: GeminiEventType.ChatCompressed, value: compressed };
+    }
+
+    // Check session token limit after compression using accurate token counting
+    const sessionTokenLimit = this.config.getSessionTokenLimit();
+    if (sessionTokenLimit > 0) {
+      // Get all the content that would be sent in an API call
+      const currentHistory = this.getChat().getHistory(true);
+      const userMemory = this.config.getUserMemory();
+      const systemPrompt = getCoreSystemPrompt(userMemory);
+      const environment = await this.getEnvironment();
+
+      // Create a mock request content to count total tokens
+      const mockRequestContent = [
+        {
+          role: 'system' as const,
+          parts: [{ text: systemPrompt }, ...environment],
+        },
+        ...currentHistory,
+      ];
+
+      // Use the improved countTokens method for accurate counting
+      const { totalTokens: totalRequestTokens } =
+        await this.getContentGenerator().countTokens({
+          model: this.config.getModel(),
+          contents: mockRequestContent,
+        });
+
+      if (
+        totalRequestTokens !== undefined &&
+        totalRequestTokens > sessionTokenLimit
+      ) {
+        yield {
+          type: GeminiEventType.SessionTokenLimitExceeded,
+          value: {
+            currentTokens: totalRequestTokens,
+            limit: sessionTokenLimit,
+            message:
+              `Session token limit exceeded: ${totalRequestTokens} tokens > ${sessionTokenLimit} limit. ` +
+              'Please start a new session or increase the sessionTokenLimit in your settings.json.',
+          },
+        };
+        return new Turn(this.getChat(), prompt_id);
+      }
     }
     const turn = new Turn(this.getChat(), prompt_id);
     const resultStream = turn.run(request, signal);

@@ -43,17 +43,22 @@ describe('clearCommand', () => {
 
     expect(mockResetChat).toHaveBeenCalledTimes(1);
 
+    expect(mockContext.session.resetSession).toHaveBeenCalledTimes(1);
+
     expect(mockContext.ui.clear).toHaveBeenCalledTimes(1);
 
     // Check the order of operations.
     const setDebugMessageOrder = (mockContext.ui.setDebugMessage as Mock).mock
       .invocationCallOrder[0];
     const resetChatOrder = mockResetChat.mock.invocationCallOrder[0];
+    const resetSessionOrder = (mockContext.session.resetSession as Mock).mock
+      .invocationCallOrder[0];
     const clearOrder = (mockContext.ui.clear as Mock).mock
       .invocationCallOrder[0];
 
     expect(setDebugMessageOrder).toBeLessThan(resetChatOrder);
-    expect(resetChatOrder).toBeLessThan(clearOrder);
+    expect(resetChatOrder).toBeLessThan(resetSessionOrder);
+    expect(resetSessionOrder).toBeLessThan(clearOrder);
   });
 
   it('should not attempt to reset chat if config service is not available', async () => {
@@ -73,6 +78,7 @@ describe('clearCommand', () => {
       'Clearing terminal and resetting chat.',
     );
     expect(mockResetChat).not.toHaveBeenCalled();
+    expect(nullConfigContext.session.resetSession).toHaveBeenCalledTimes(1);
     expect(nullConfigContext.ui.clear).toHaveBeenCalledTimes(1);
   });
 });

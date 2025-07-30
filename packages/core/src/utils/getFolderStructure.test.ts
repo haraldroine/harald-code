@@ -115,7 +115,7 @@ describe('getFolderStructure', () => {
   it('should return basic folder structure', async () => {
     const structure = await getFolderStructure('/testroot/subfolderA');
     const expected = `
-Showing up to 200 items (files + folders).
+Showing up to 20 items (files + folders).
 
 /testroot/subfolderA/
 ├───fileA1.ts
@@ -129,7 +129,7 @@ Showing up to 200 items (files + folders).
   it('should handle an empty folder', async () => {
     const structure = await getFolderStructure('/testroot/emptyFolder');
     const expected = `
-Showing up to 200 items (files + folders).
+Showing up to 20 items (files + folders).
 
 /testroot/emptyFolder/
 `.trim();
@@ -139,7 +139,7 @@ Showing up to 200 items (files + folders).
   it('should ignore folders specified in ignoredFolders (default)', async () => {
     const structure = await getFolderStructure('/testroot');
     const expected = `
-Showing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.
+Showing up to 20 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (20 items) was reached.
 
 /testroot/
 ├───.hiddenfile
@@ -160,7 +160,7 @@ Showing up to 200 items (files + folders). Folders or files indicated with ... c
       ignoredFolders: new Set(['subfolderA', 'node_modules']),
     });
     const expected = `
-Showing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.
+Showing up to 20 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (20 items) was reached.
 
 /testroot/
 ├───.hiddenfile
@@ -177,7 +177,7 @@ Showing up to 200 items (files + folders). Folders or files indicated with ... c
       fileIncludePattern: /\.ts$/,
     });
     const expected = `
-Showing up to 200 items (files + folders).
+Showing up to 20 items (files + folders).
 
 /testroot/subfolderA/
 ├───fileA1.ts

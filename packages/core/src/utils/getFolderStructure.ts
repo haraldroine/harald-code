@@ -10,7 +10,7 @@ import * as path from 'path';
 import { getErrorMessage, isNodeError } from './errors.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 
-const MAX_ITEMS = 200;
+const MAX_ITEMS = 20;
 const TRUNCATION_INDICATOR = '...';
 const DEFAULT_IGNORED_FOLDERS = new Set(['node_modules', '.git', 'dist']);
 
@@ -18,7 +18,7 @@ const DEFAULT_IGNORED_FOLDERS = new Set(['node_modules', '.git', 'dist']);
 
 /** Options for customizing folder structure retrieval. */
 interface FolderStructureOptions {
-  /** Maximum number of files and folders combined to display. Defaults to 200. */
+  /** Maximum number of files and folders combined to display. Defaults to 20. */
   maxItems?: number;
   /** Set of folder names to ignore completely. Case-sensitive. */
   ignoredFolders?: Set<string>;

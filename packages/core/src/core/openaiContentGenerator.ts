@@ -578,14 +578,26 @@ export class OpenAIContentGenerator implements ContentGenerator {
   async countTokens(
     request: CountTokensParameters,
   ): Promise<CountTokensResponse> {
-    // OpenAI doesn't have a direct token counting endpoint
-    // We'll estimate based on the tiktoken library or a rough calculation
-    // For now, return a rough estimate
+    // Use tiktoken for accurate token counting
     const content = JSON.stringify(request.contents);
-    const estimatedTokens = Math.ceil(content.length / 4); // Rough estimate: 1 token ≈ 4 characters
+    let totalTokens = 0;
+
+    try {
+      const { get_encoding } = await import('tiktoken');
+      const encoding = get_encoding('cl100k_base'); // GPT-4 encoding, but estimate for qwen
+      totalTokens = encoding.encode(content).length;
+      encoding.free();
+    } catch (error) {
+      console.warn(
+        'Failed to load tiktoken, falling back to character approximation:',
+        error,
+      );
+      // Fallback: rough approximation using character count
+      totalTokens = Math.ceil(content.length / 4); // Rough estimate: 1 token ≈ 4 characters
+    }
 
     return {
-      totalTokens: estimatedTokens,
+      totalTokens,
     };
   }
 

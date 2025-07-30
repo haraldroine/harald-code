@@ -452,6 +452,23 @@ export const useGeminiStream = (
     [addItem, config],
   );
 
+  const handleSessionTokenLimitExceededEvent = useCallback(
+    (value: { currentTokens: number; limit: number; message: string }) =>
+      addItem(
+        {
+          type: 'error',
+          text:
+            `🚫 Session token limit exceeded: ${value.currentTokens.toLocaleString()} tokens > ${value.limit.toLocaleString()} limit.\n\n` +
+            `💡 Solutions:\n` +
+            `   • Start a new session: Use /clear command\n` +
+            `   • Increase limit: Add "sessionTokenLimit": (e.g., 128000) to your settings.json\n` +
+            `   • Compress history: Use /compress command to compress history`,
+        },
+        Date.now(),
+      ),
+    [addItem],
+  );
+
   const handleLoopDetectedEvent = useCallback(() => {
     addItem(
       {
@@ -501,6 +518,9 @@ export const useGeminiStream = (
           case ServerGeminiEventType.MaxSessionTurns:
             handleMaxSessionTurnsEvent();
             break;
+          case ServerGeminiEventType.SessionTokenLimitExceeded:
+            handleSessionTokenLimitExceededEvent(event.value);
+            break;
           case ServerGeminiEventType.LoopDetected:
             // handle later because we want to move pending history to history
             // before we add loop detected message to history
@@ -525,6 +545,7 @@ export const useGeminiStream = (
       scheduleToolCalls,
       handleChatCompressionEvent,
       handleMaxSessionTurnsEvent,
+      handleSessionTokenLimitExceededEvent,
     ],
   );
 

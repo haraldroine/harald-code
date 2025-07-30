@@ -57,6 +57,7 @@ describe('loggers', () => {
   };
 
   beforeEach(() => {
+    vi.clearAllMocks(); // 清除之前测试的 mock 调用
     vi.spyOn(sdk, 'isTelemetrySdkInitialized').mockReturnValue(true);
     vi.spyOn(logs, 'getLogger').mockReturnValue(mockLogger);
     vi.spyOn(uiTelemetry.uiTelemetryService, 'addEvent').mockImplementation(
@@ -146,7 +147,7 @@ describe('loggers', () => {
           'event.name': EVENT_USER_PROMPT,
           'event.timestamp': '2025-01-01T00:00:00.000Z',
           prompt_length: 11,
-          prompt: 'test-prompt',
+          // 移除 prompt 字段，因为 shouldLogUserPrompts 现在返回 false
         },
       });
     });

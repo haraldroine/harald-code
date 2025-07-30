@@ -45,6 +45,17 @@ npm install
 npm install -g .
 ```
 
+We now support max session token limit, you can set it in your `.qwen/settings.json` file to save the token usage.
+For example, if you want to set the max session token limit to 32000, you can set it like this:
+
+```json
+{
+  "maxSessionToken": 32000
+}
+```
+
+The max session means the maximum number of tokens that can be used in one chat (not the total usage during multiple tool call shoots); if you reach the limit, you can use the `/compress` command to compress the history and go on, or use `/clear` command to clear the history.
+
 ### API Configuration
 
 Set your Qwen API key (In Qwen Code project, you can also set your API key in `.env` file). the `.env` file should be placed in the root directory of your current project.

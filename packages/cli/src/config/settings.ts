@@ -85,6 +85,12 @@ export interface Settings {
   // Setting for setting maximum number of user/model/tool turns in a session.
   maxSessionTurns?: number;
 
+  // Setting for maximum token limit for conversation history before blocking requests
+  sessionTokenLimit?: number;
+
+  // Setting for maximum number of files and folders to show in folder structure
+  maxFolderItems?: number;
+
   // Sampling parameters for content generation
   sampling_params?: {
     top_p?: number;

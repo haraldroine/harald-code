@@ -12,6 +12,7 @@ export const clearCommand: SlashCommand = {
   action: async (context, _args) => {
     context.ui.setDebugMessage('Clearing terminal and resetting chat.');
     await context.services.config?.getGeminiClient()?.resetChat();
+    context.session.resetSession();
     context.ui.clear();
   },
 };
