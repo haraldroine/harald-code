@@ -17,6 +17,7 @@ import { WriteFileTool } from '../tools/write-file.js';
 import process from 'node:process';
 import { isGitRepository } from '../utils/gitUtils.js';
 import { MemoryTool, GEMINI_CONFIG_DIR } from '../tools/memoryTool.js';
+import { DEFAULT_GEMINI_MODEL } from '../config/models.js';
 
 export interface ModelTemplateMapping {
   baseUrls?: string[];
@@ -65,7 +66,7 @@ export function getCoreSystemPrompt(
 
   // Check for system prompt mappings from global config
   if (config?.systemPromptMappings) {
-    const currentModel = process.env.OPENAI_MODEL || '';
+    const currentModel = process.env.OPENAI_MODEL || DEFAULT_GEMINI_MODEL;
     const currentBaseUrl = process.env.OPENAI_BASE_URL || '';
 
     const matchedMapping = config.systemPromptMappings.find((mapping) => {
