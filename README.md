@@ -26,7 +26,7 @@ curl -qL https://www.npmjs.com/install.sh | sh
 ### Installation
 
 ```bash
-npm install -g @qwen-code/qwen-code
+npm install -g @qwen-code/qwen-code@latest
 qwen --version
 ```
 

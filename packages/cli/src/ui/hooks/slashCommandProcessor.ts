@@ -540,7 +540,7 @@ export const useSlashCommandProcessor = (
           // Filter out MCP tools by checking if they have a serverName property
           const geminiTools = tools.filter((tool) => !('serverName' in tool));
 
-          let message = 'Available Gemini CLI tools:\n\n';
+          let message = 'Available Qwen Code tools:\n\n';
 
           if (geminiTools.length > 0) {
             geminiTools.forEach((tool) => {
