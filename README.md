@@ -50,7 +50,7 @@ For example, if you want to set the max session token limit to 32000, you can se
 
 ```json
 {
-  "maxSessionToken": 32000
+  "sessionTokenLimit": 32000
 }
 ```
 
