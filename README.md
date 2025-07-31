@@ -18,8 +18,8 @@
 Qwen Code is a powerful command-line AI workflow tool adapted from [**Gemini CLI**](https://github.com/google-gemini/gemini-cli) ([details](./README.gemini.md)), specifically optimized for [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) models. It enhances your development workflow with advanced code understanding, automated tasks, and intelligent assistance.
 
 > [!WARNING]
-> **Token Usage Notice**: Qwen Code may issue multiple API calls per cycle, resulting in higher token usage (similar to Claude Code). We're actively optimizing API efficiency. 
-> 
+> **Token Usage Notice**: Qwen Code may issue multiple API calls per cycle, resulting in higher token usage (similar to Claude Code). We're actively optimizing API efficiency.
+>
 > 💡 **Free Option**: ModelScope provides **2,000 free API calls per day** for users in mainland China. OpenRouter offers up to **1,000 free API calls per day** worldwide. For setup instructions, see [API Configuration](#api-configuration).
 
 ## Key Features
@@ -39,12 +39,14 @@ curl -qL https://www.npmjs.com/install.sh | sh
 ```
 
 ### Install from npm
+
 ```bash
 npm install -g @qwen-code/qwen-code@latest
 qwen --version
 ```
 
 ### Install from source
+
 ```bash
 git clone https://github.com/QwenLM/qwen-code.git
 cd qwen-code
@@ -93,6 +95,7 @@ Qwen Code supports multiple API providers. You can configure your API key throug
 #### Configuration Methods
 
 1. **Environment Variables**
+
    ```bash
    export OPENAI_API_KEY="your_api_key_here"
    export OPENAI_BASE_URL="your_api_endpoint"
@@ -110,6 +113,7 @@ Qwen Code supports multiple API providers. You can configure your API key throug
 #### API Provider Options
 
 > ⚠️ **Regional Notice:**
+>
 > - **Mainland China**: Use Alibaba Cloud Bailian or ModelScope
 > - **International**: Use Alibaba Cloud ModelStudio or OpenRouter
 
@@ -117,6 +121,7 @@ Qwen Code supports multiple API providers. You can configure your API key throug
 <summary><b>🇨🇳 For Users in Mainland China</b></summary>
 
 **Option 1: Alibaba Cloud Bailian** ([Apply for API Key](https://bailian.console.aliyun.com/))
+
 ```bash
 export OPENAI_API_KEY="your_api_key_here"
 export OPENAI_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"
@@ -124,6 +129,7 @@ export OPENAI_MODEL="qwen3-coder-plus"
 ```
 
 **Option 2: ModelScope (Free Tier)** ([Apply for API Key](https://modelscope.cn/docs/model-service/API-Inference/intro))
+
 - ✅ **2,000 free API calls per day**
 - ⚠️ Connect your Aliyun account to avoid authentication errors
 
@@ -132,12 +138,14 @@ export OPENAI_API_KEY="your_api_key_here"
 export OPENAI_BASE_URL="https://api-inference.modelscope.cn/v1"
 export OPENAI_MODEL="Qwen/Qwen3-Coder-480B-A35B-Instruct"
 ```
+
 </details>
 
 <details>
 <summary><b>🌍 For International Users</b></summary>
 
 **Option 1: Alibaba Cloud ModelStudio** ([Apply for API Key](https://modelstudio.console.alibabacloud.com/))
+
 ```bash
 export OPENAI_API_KEY="your_api_key_here"
 export OPENAI_BASE_URL="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
@@ -145,11 +153,13 @@ export OPENAI_MODEL="qwen3-coder-plus"
 ```
 
 **Option 2: OpenRouter (Free Tier Available)** ([Apply for API Key](https://openrouter.ai/))
+
 ```bash
 export OPENAI_API_KEY="your_api_key_here"
 export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 export OPENAI_MODEL="qwen/qwen3-coder:free"
 ```
+
 </details>
 
 ## Usage Examples
@@ -251,6 +261,7 @@ qwen
 ## Commands & Shortcuts
 
 ### Session Commands
+
 - `/help` - Display available commands
 - `/clear` - Clear conversation history
 - `/compress` - Compress history to save tokens
@@ -258,6 +269,7 @@ qwen
 - `/exit` or `/quit` - Exit Qwen Code
 
 ### Keyboard Shortcuts
+
 - `Ctrl+C` - Cancel current operation
 - `Ctrl+D` - Exit (on empty line)
 - `Up/Down` - Navigate command history
