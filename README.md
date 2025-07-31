@@ -88,6 +88,14 @@ export OPENAI_BASE_URL="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 export OPENAI_MODEL="qwen3-coder-plus"
 ```
 
+OpenRouter also provides free Qwen3-Coder model access:
+
+```bash
+export OPENAI_API_KEY="your_api_key_here"
+export OPENAI_BASE_URL=https://openrouter.ai/api/v1
+export OPENAI_MODEL="qwen/qwen3-coder:free"
+```
+
 ## Usage Examples
 
 ### Explore Codebases

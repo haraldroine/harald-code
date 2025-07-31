@@ -118,11 +118,21 @@ export class OpenAIContentGenerator implements ContentGenerator {
       timeoutConfig.maxRetries = contentGeneratorConfig.maxRetries;
     }
 
+    // Check if using OpenRouter and add required headers
+    const isOpenRouter = baseURL.includes('openrouter.ai');
+    const defaultHeaders = isOpenRouter
+      ? {
+          'HTTP-Referer': 'https://github.com/QwenLM/qwen-code.git',
+          'X-Title': 'Qwen Code',
+        }
+      : undefined;
+
     this.client = new OpenAI({
       apiKey,
       baseURL,
       timeout: timeoutConfig.timeout,
       maxRetries: timeoutConfig.maxRetries,
+      defaultHeaders,
     });
   }
 
