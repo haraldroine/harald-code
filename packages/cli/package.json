@@ -1,10 +1,10 @@
 {
   "name": "@qwen-code/qwen-code",
-  "version": "0.0.1",
-  "description": "Gemini CLI",
+  "version": "0.0.2",
+  "description": "Qwen Code",
   "repository": {
     "type": "git",
-    "url": "git+http://gitlab.alibaba-inc.com/Qwen-Coder/qwen-code.git"
+    "url": "git+https://github.com/QwenLM/qwen-code.git"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -25,7 +25,7 @@
     "dist"
   ],
   "config": {
-    "sandboxImageUri": "ghcr.io/qwenlm/qwen-code:0.0.1"
+    "sandboxImageUri": "ghcr.io/qwenlm/qwen-code:0.0.2"
   },
   "dependencies": {
     "@qwen-code/qwen-code-core": "file:../core",
