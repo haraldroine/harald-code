@@ -182,9 +182,10 @@ export class GeminiClient {
     const platform = process.platform;
     const folderStructure = await getFolderStructure(cwd, {
       fileService: this.config.getFileService(),
+      maxItems: this.config.getMaxFolderItems(),
     });
     const context = `
-  This is the Gemini CLI. We are setting up the context for our chat.
+  This is the Qwen Code. We are setting up the context for our chat.
   Today's date is ${today}.
   My operating system is: ${platform}
   I'm currently working in the directory: ${cwd}
@@ -319,6 +320,49 @@ export class GeminiClient {
       yield { type: GeminiEventType.ChatCompressed, value: compressed };
     }
 
+    // Check session token limit after compression using accurate token counting
+    const sessionTokenLimit = this.config.getSessionTokenLimit();
+    if (sessionTokenLimit > 0) {
+      // Get all the content that would be sent in an API call
+      const currentHistory = this.getChat().getHistory(true);
+      const userMemory = this.config.getUserMemory();
+      const systemPrompt = getCoreSystemPrompt(userMemory);
+      const environment = await this.getEnvironment();
+
+      // Create a mock request content to count total tokens
+      const mockRequestContent = [
+        {
+          role: 'system' as const,
+          parts: [{ text: systemPrompt }, ...environment],
+        },
+        ...currentHistory,
+      ];
+
+      // Use the improved countTokens method for accurate counting
+      const { totalTokens: totalRequestTokens } =
+        await this.getContentGenerator().countTokens({
+          model: this.config.getModel(),
+          contents: mockRequestContent,
+        });
+
+      if (
+        totalRequestTokens !== undefined &&
+        totalRequestTokens > sessionTokenLimit
+      ) {
+        yield {
+          type: GeminiEventType.SessionTokenLimitExceeded,
+          value: {
+            currentTokens: totalRequestTokens,
+            limit: sessionTokenLimit,
+            message:
+              `Session token limit exceeded: ${totalRequestTokens} tokens > ${sessionTokenLimit} limit. ` +
+              'Please start a new session or increase the sessionTokenLimit in your settings.json.',
+          },
+        };
+        return new Turn(this.getChat(), prompt_id);
+      }
+    }
+
     if (this.config.getIdeMode()) {
       const openFiles = ideContext.getOpenFilesContext();
       if (openFiles) {
@@ -419,7 +463,10 @@ export class GeminiClient {
       model || this.config.getModel() || DEFAULT_GEMINI_FLASH_MODEL;
     try {
       const userMemory = this.config.getUserMemory();
-      const systemInstruction = getCoreSystemPrompt(userMemory);
+      const systemPromptMappings = this.config.getSystemPromptMappings();
+      const systemInstruction = getCoreSystemPrompt(userMemory, {
+        systemPromptMappings,
+      });
       const requestConfig = {
         abortSignal,
         ...this.generateContentConfig,
@@ -458,7 +505,30 @@ export class GeminiClient {
         throw error;
       }
       try {
-        return JSON.parse(text);
+        // Try to extract JSON from various formats
+        const extractors = [
+          // Match ```json ... ``` or ``` ... ``` blocks
+          /```(?:json)?\s*\n?([\s\S]*?)\n?```/,
+          // Match inline code blocks `{...}`
+          /`(\{[\s\S]*?\})`/,
+          // Match raw JSON objects or arrays
+          /(\{[\s\S]*\}|\[[\s\S]*\])/,
+        ];
+
+        for (const regex of extractors) {
+          const match = text.match(regex);
+          if (match && match[1]) {
+            try {
+              return JSON.parse(match[1].trim());
+            } catch {
+              // Continue to next pattern if parsing fails
+              continue;
+            }
+          }
+        }
+
+        // If no patterns matched, try parsing the entire text
+        return JSON.parse(text.trim());
       } catch (parseError) {
         await reportError(
           parseError,
@@ -512,7 +582,10 @@ export class GeminiClient {
 
     try {
       const userMemory = this.config.getUserMemory();
-      const systemInstruction = getCoreSystemPrompt(userMemory);
+      const systemPromptMappings = this.config.getSystemPromptMappings();
+      const systemInstruction = getCoreSystemPrompt(userMemory, {
+        systemPromptMappings,
+      });
 
       const requestConfig = {
         abortSignal,

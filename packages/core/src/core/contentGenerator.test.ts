@@ -69,6 +69,10 @@ describe('createContentGeneratorConfig', () => {
     setModel: vi.fn(),
     flashFallbackHandler: vi.fn(),
     getProxy: vi.fn(),
+    getEnableOpenAILogging: vi.fn().mockReturnValue(false),
+    getSamplingParams: vi.fn().mockReturnValue(undefined),
+    getContentGeneratorTimeout: vi.fn().mockReturnValue(undefined),
+    getContentGeneratorMaxRetries: vi.fn().mockReturnValue(undefined),
   } as unknown as Config;
 
   beforeEach(() => {

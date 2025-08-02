@@ -45,7 +45,7 @@ describe('getFolderStructure', () => {
     const structure = await getFolderStructure(testRootDir);
     expect(structure.trim()).toBe(
       `
-Showing up to 200 items (files + folders).
+Showing up to 20 items (files + folders).
 
 ${testRootDir}${path.sep}
 ├───fileA1.ts
@@ -60,7 +60,7 @@ ${testRootDir}${path.sep}
     const structure = await getFolderStructure(testRootDir);
     expect(structure.trim()).toBe(
       `
-Showing up to 200 items (files + folders).
+Showing up to 20 items (files + folders).
 
 ${testRootDir}${path.sep}
 `
@@ -81,7 +81,7 @@ ${testRootDir}${path.sep}
     const structure = await getFolderStructure(testRootDir);
     expect(structure.trim()).toBe(
       `
-Showing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.
+Showing up to 20 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (20 items) was reached.
 
 ${testRootDir}${path.sep}
 ├───.hiddenfile
@@ -108,7 +108,7 @@ ${testRootDir}${path.sep}
       ignoredFolders: new Set(['subfolderA', 'node_modules']),
     });
     const expected = `
-Showing up to 200 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (200 items) was reached.
+Showing up to 20 items (files + folders). Folders or files indicated with ... contain more items not shown, were ignored, or the display limit (20 items) was reached.
 
 ${testRootDir}${path.sep}
 ├───.hiddenfile
@@ -129,7 +129,7 @@ ${testRootDir}${path.sep}
       fileIncludePattern: /\.ts$/,
     });
     const expected = `
-Showing up to 200 items (files + folders).
+Showing up to 20 items (files + folders).
 
 ${testRootDir}${path.sep}
 ├───fileA1.ts

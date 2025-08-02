@@ -1154,7 +1154,9 @@ export class OpenAIContentGenerator implements ContentGenerator {
     }
 
     response.responseId = openaiResponse.id;
-    response.createTime = openaiResponse.created.toString();
+    response.createTime = openaiResponse.created
+      ? openaiResponse.created.toString()
+      : new Date().getTime().toString();
 
     response.candidates = [
       {
@@ -1290,7 +1292,9 @@ export class OpenAIContentGenerator implements ContentGenerator {
     }
 
     response.responseId = chunk.id;
-    response.createTime = chunk.created.toString();
+    response.createTime = chunk.created
+      ? chunk.created.toString()
+      : new Date().getTime().toString();
 
     response.modelVersion = this.model;
     response.promptFeedback = { safetyRatings: [] };

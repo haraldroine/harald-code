@@ -175,6 +175,8 @@ export interface ConfigParameters {
   model: string;
   extensionContextFilePaths?: string[];
   maxSessionTurns?: number;
+  sessionTokenLimit?: number;
+  maxFolderItems?: number;
   experimentalAcp?: boolean;
   listExtensions?: boolean;
   extensions?: GeminiCLIExtension[];
@@ -190,6 +192,10 @@ export interface ConfigParameters {
     modelNames: string[];
     template: string;
   }>;
+  contentGenerator?: {
+    timeout?: number;
+    maxRetries?: number;
+  };
 }
 
 export class Config {
@@ -233,8 +239,15 @@ export class Config {
   private readonly noBrowser: boolean;
   private readonly ideMode: boolean;
   private readonly ideClient: IdeClient | undefined;
+  private readonly systemPromptMappings?: Array<{
+    baseUrls?: string[];
+    modelNames?: string[];
+    template?: string;
+  }>;
   private modelSwitchedDuringSession: boolean = false;
   private readonly maxSessionTurns: number;
+  private readonly sessionTokenLimit: number;
+  private readonly maxFolderItems: number;
   private readonly listExtensions: boolean;
   private readonly _extensions: GeminiCLIExtension[];
   private readonly _blockedMcpServers: Array<{
@@ -247,7 +260,12 @@ export class Config {
     | Record<string, SummarizeToolOutputSettings>
     | undefined;
   private readonly experimentalAcp: boolean = false;
-
+  private readonly enableOpenAILogging: boolean;
+  private readonly sampling_params?: Record<string, unknown>;
+  private readonly contentGenerator?: {
+    timeout?: number;
+    maxRetries?: number;
+  };
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
     this.embeddingModel =
@@ -291,6 +309,8 @@ export class Config {
     this.model = params.model;
     this.extensionContextFilePaths = params.extensionContextFilePaths ?? [];
     this.maxSessionTurns = params.maxSessionTurns ?? -1;
+    this.sessionTokenLimit = params.sessionTokenLimit ?? 32000;
+    this.maxFolderItems = params.maxFolderItems ?? 20;
     this.experimentalAcp = params.experimentalAcp ?? false;
     this.listExtensions = params.listExtensions ?? false;
     this._extensions = params.extensions ?? [];
@@ -299,6 +319,10 @@ export class Config {
     this.summarizeToolOutput = params.summarizeToolOutput;
     this.ideMode = params.ideMode ?? false;
     this.ideClient = params.ideClient;
+    this.systemPromptMappings = params.systemPromptMappings;
+    this.enableOpenAILogging = params.enableOpenAILogging ?? false;
+    this.sampling_params = params.sampling_params;
+    this.contentGenerator = params.contentGenerator;
 
     if (params.contextFileName) {
       setGeminiMdFilename(params.contextFileName);
@@ -376,6 +400,14 @@ export class Config {
 
   getMaxSessionTurns(): number {
     return this.maxSessionTurns;
+  }
+
+  getSessionTokenLimit(): number {
+    return this.sessionTokenLimit;
+  }
+
+  getMaxFolderItems(): number {
+    return this.maxFolderItems;
   }
 
   setQuotaErrorOccurred(value: boolean): void {
@@ -594,6 +626,32 @@ export class Config {
 
   getIdeClient(): IdeClient | undefined {
     return this.ideClient;
+  }
+
+  getEnableOpenAILogging(): boolean {
+    return this.enableOpenAILogging;
+  }
+
+  getSamplingParams(): Record<string, unknown> | undefined {
+    return this.sampling_params;
+  }
+
+  getContentGeneratorTimeout(): number | undefined {
+    return this.contentGenerator?.timeout;
+  }
+
+  getContentGeneratorMaxRetries(): number | undefined {
+    return this.contentGenerator?.maxRetries;
+  }
+
+  getSystemPromptMappings():
+    | Array<{
+        baseUrls?: string[];
+        modelNames?: string[];
+        template?: string;
+      }>
+    | undefined {
+    return this.systemPromptMappings;
   }
 
   async getGitService(): Promise<GitService> {

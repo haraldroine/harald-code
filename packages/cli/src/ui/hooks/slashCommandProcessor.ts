@@ -162,6 +162,7 @@ export const useSlashCommandProcessor = (
       session: {
         stats: session.stats,
         sessionShellAllowlist,
+        resetSession: session.resetSession,
       },
     }),
     [
@@ -174,6 +175,7 @@ export const useSlashCommandProcessor = (
       clearItems,
       refreshStatic,
       session.stats,
+      session.resetSession,
       onDebugMessage,
       pendingCompressionItemRef,
       setPendingCompressionItem,

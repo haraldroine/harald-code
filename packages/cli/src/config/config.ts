@@ -441,6 +441,8 @@ export async function loadCliConfig(
     model: argv.model!,
     extensionContextFilePaths,
     maxSessionTurns: settings.maxSessionTurns ?? -1,
+    sessionTokenLimit: settings.sessionTokenLimit ?? 32000,
+    maxFolderItems: settings.maxFolderItems ?? 20,
     experimentalAcp: argv.experimentalAcp || false,
     listExtensions: argv.listExtensions || false,
     extensions: allExtensions,
@@ -465,6 +467,7 @@ export async function loadCliConfig(
           'SYSTEM_TEMPLATE:{"name":"qwen3_coder","params":{"is_git_repository":{RUNTIME_VARS_IS_GIT_REPO},"sandbox":"{RUNTIME_VARS_SANDBOX}"}}',
       },
     ],
+    contentGenerator: settings.contentGenerator,
   });
 }
 

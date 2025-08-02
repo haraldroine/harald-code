@@ -50,6 +50,7 @@ export enum GeminiEventType {
   ChatCompressed = 'chat_compressed',
   Thought = 'thought',
   MaxSessionTurns = 'max_session_turns',
+  SessionTokenLimitExceeded = 'session_token_limit_exceeded',
   Finished = 'finished',
   LoopDetected = 'loop_detected',
 }
@@ -61,6 +62,12 @@ export interface StructuredError {
 
 export interface GeminiErrorEventValue {
   error: StructuredError;
+}
+
+export interface SessionTokenLimitExceededValue {
+  currentTokens: number;
+  limit: number;
+  message: string;
 }
 
 export interface ToolCallRequestInfo {
@@ -136,6 +143,11 @@ export type ServerGeminiMaxSessionTurnsEvent = {
   type: GeminiEventType.MaxSessionTurns;
 };
 
+export type ServerGeminiSessionTokenLimitExceededEvent = {
+  type: GeminiEventType.SessionTokenLimitExceeded;
+  value: SessionTokenLimitExceededValue;
+};
+
 export type ServerGeminiFinishedEvent = {
   type: GeminiEventType.Finished;
   value: FinishReason;
@@ -156,6 +168,7 @@ export type ServerGeminiStreamEvent =
   | ServerGeminiChatCompressedEvent
   | ServerGeminiThoughtEvent
   | ServerGeminiMaxSessionTurnsEvent
+  | ServerGeminiSessionTokenLimitExceededEvent
   | ServerGeminiFinishedEvent
   | ServerGeminiLoopDetectedEvent;
 

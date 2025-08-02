@@ -55,6 +55,7 @@ describe('clearCommand', () => {
     expect(mockContext.ui.setDebugMessage).toHaveBeenCalledTimes(1);
 
     expect(mockResetChat).toHaveBeenCalledTimes(1);
+    expect(mockContext.session.resetSession).toHaveBeenCalledTimes(1);
     expect(uiTelemetryService.resetLastPromptTokenCount).toHaveBeenCalledTimes(
       1,
     );
@@ -64,6 +65,8 @@ describe('clearCommand', () => {
     const setDebugMessageOrder = (mockContext.ui.setDebugMessage as Mock).mock
       .invocationCallOrder[0];
     const resetChatOrder = mockResetChat.mock.invocationCallOrder[0];
+    const resetSessionOrder = (mockContext.session.resetSession as Mock).mock
+      .invocationCallOrder[0];
     const resetTelemetryOrder = (
       uiTelemetryService.resetLastPromptTokenCount as Mock
     ).mock.invocationCallOrder[0];
@@ -73,6 +76,8 @@ describe('clearCommand', () => {
     expect(setDebugMessageOrder).toBeLessThan(resetChatOrder);
     expect(resetChatOrder).toBeLessThan(resetTelemetryOrder);
     expect(resetTelemetryOrder).toBeLessThan(clearOrder);
+    expect(resetChatOrder).toBeLessThan(resetSessionOrder);
+    expect(resetSessionOrder).toBeLessThan(clearOrder);
   });
 
   it('should not attempt to reset chat if config service is not available', async () => {
@@ -92,6 +97,7 @@ describe('clearCommand', () => {
       'Clearing terminal.',
     );
     expect(mockResetChat).not.toHaveBeenCalled();
+    expect(nullConfigContext.session.resetSession).toHaveBeenCalledTimes(1);
     expect(uiTelemetryService.resetLastPromptTokenCount).toHaveBeenCalledTimes(
       1,
     );

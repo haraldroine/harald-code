@@ -108,7 +108,7 @@ export class MCPOAuthProvider {
       `http://localhost:${this.REDIRECT_PORT}${this.REDIRECT_PATH}`;
 
     const registrationRequest: OAuthClientRegistrationRequest = {
-      client_name: 'Gemini CLI MCP Client',
+      client_name: 'Gemini CLI (Google ADC)',
       redirect_uris: [redirectUri],
       grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],

@@ -85,6 +85,10 @@ export function createContentGeneratorConfig(
     model: effectiveModel,
     authType,
     proxy: config?.getProxy(),
+    enableOpenAILogging: config.getEnableOpenAILogging(),
+    timeout: config.getContentGeneratorTimeout(),
+    maxRetries: config.getContentGeneratorMaxRetries(),
+    samplingParams: config.getSamplingParams(),
   };
 
   // If we are using Google auth or we are in Cloud Shell, there is nothing else to validate for now
