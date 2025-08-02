@@ -15,6 +15,7 @@ describe('validateNonInterActiveAuth', () => {
   let originalEnvGeminiApiKey: string | undefined;
   let originalEnvVertexAi: string | undefined;
   let originalEnvGcp: string | undefined;
+  let originalEnvOpenAiApiKey: string | undefined;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
   let processExitSpy: ReturnType<typeof vi.spyOn>;
   let refreshAuthMock: jest.MockedFunction<
@@ -25,9 +26,11 @@ describe('validateNonInterActiveAuth', () => {
     originalEnvGeminiApiKey = process.env.GEMINI_API_KEY;
     originalEnvVertexAi = process.env.GOOGLE_GENAI_USE_VERTEXAI;
     originalEnvGcp = process.env.GOOGLE_GENAI_USE_GCA;
+    originalEnvOpenAiApiKey = process.env.OPENAI_API_KEY;
     delete process.env.GEMINI_API_KEY;
     delete process.env.GOOGLE_GENAI_USE_VERTEXAI;
     delete process.env.GOOGLE_GENAI_USE_GCA;
+    delete process.env.OPENAI_API_KEY;
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     processExitSpy = vi.spyOn(process, 'exit').mockImplementation((code) => {
       throw new Error(`process.exit(${code}) called`);
@@ -50,6 +53,11 @@ describe('validateNonInterActiveAuth', () => {
       process.env.GOOGLE_GENAI_USE_GCA = originalEnvGcp;
     } else {
       delete process.env.GOOGLE_GENAI_USE_GCA;
+    }
+    if (originalEnvOpenAiApiKey !== undefined) {
+      process.env.OPENAI_API_KEY = originalEnvOpenAiApiKey;
+    } else {
+      delete process.env.OPENAI_API_KEY;
     }
     vi.restoreAllMocks();
   });
@@ -86,6 +94,15 @@ describe('validateNonInterActiveAuth', () => {
     };
     await validateNonInteractiveAuth(undefined, nonInteractiveConfig);
     expect(refreshAuthMock).toHaveBeenCalledWith(AuthType.USE_GEMINI);
+  });
+
+  it('uses USE_OPENAI if OPENAI_API_KEY is set', async () => {
+    process.env.OPENAI_API_KEY = 'fake-openai-key';
+    const nonInteractiveConfig: NonInteractiveConfig = {
+      refreshAuth: refreshAuthMock,
+    };
+    await validateNonInteractiveAuth(undefined, nonInteractiveConfig);
+    expect(refreshAuthMock).toHaveBeenCalledWith(AuthType.USE_OPENAI);
   });
 
   it('uses USE_VERTEX_AI if GOOGLE_GENAI_USE_VERTEXAI is true (with GOOGLE_CLOUD_PROJECT and GOOGLE_CLOUD_LOCATION)', async () => {
