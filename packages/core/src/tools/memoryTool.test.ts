@@ -20,7 +20,7 @@ import * as os from 'os';
 vi.mock('fs/promises');
 vi.mock('os');
 
-const MEMORY_SECTION_HEADER = '## Gemini Added Memories';
+const MEMORY_SECTION_HEADER = '## Qwen Added Memories';
 
 // Define a type for our fsAdapter to ensure consistency
 interface FsAdapter {
@@ -87,7 +87,7 @@ describe('MemoryTool', () => {
   describe('performAddMemoryEntry (static method)', () => {
     const testFilePath = path.join(
       '/mock/home',
-      '.gemini',
+      '.qwen',
       DEFAULT_CONTEXT_FILENAME, // Use the default for basic tests
     );
 
@@ -207,7 +207,7 @@ describe('MemoryTool', () => {
       // Use getCurrentGeminiMdFilename for the default expectation before any setGeminiMdFilename calls in a test
       const expectedFilePath = path.join(
         '/mock/home',
-        '.gemini',
+        '.qwen',
         getCurrentGeminiMdFilename(), // This will be DEFAULT_CONTEXT_FILENAME unless changed by a test
       );
 
