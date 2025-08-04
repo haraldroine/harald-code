@@ -15,17 +15,10 @@ jobs:
       id-token: write
       issues: write
     steps:
-      - name: Generate GitHub App Token
-        id: generate_token
-        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
-
       - name: Find untriaged issues
         id: find_issues
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "🔍 Finding issues without labels..."
           NO_LABEL_ISSUES=$(gh issue list --repo ${{ github.repository }} --search "is:open is:issue no:label" --json number,title,body)
@@ -49,7 +42,7 @@ jobs:
           ISSUES_TO_TRIAGE: ${{ steps.find_issues.outputs.issues_to_triage }}
           REPOSITORY: ${{ github.repository }}
         with:
-          version: 0.1.8-rc.0
+          version: 0.0.4
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           settings_json: |
             {
