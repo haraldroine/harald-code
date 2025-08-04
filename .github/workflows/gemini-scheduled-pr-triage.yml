@@ -19,7 +19,7 @@ jobs:
       prs_needing_comment: ${{ steps.run_triage.outputs.prs_needing_comment }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@5fd6818d04d64e87d255ee4d5f77995e32fbf4c2 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Run PR Triage Script
         id: run_triage
