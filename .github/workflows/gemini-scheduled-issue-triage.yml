@@ -1,4 +1,4 @@
-name: Gemini Scheduled Issue Triage
+name: Qwen Scheduled Issue Triage
 
 on:
   schedule:
@@ -8,7 +8,7 @@ on:
 jobs:
   triage-issues:
     timeout-minutes: 10
-    if: ${{ github.repository == 'google-gemini/gemini-cli' }}
+    if: ${{ github.repository == 'QwenLM/qwen-code' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,18 +41,16 @@ jobs:
 
           echo "✅ Found $(echo "$ISSUES" | jq 'length') issues to triage! 🎯"
 
-      - name: Run Gemini Issue Triage
+      - name: Run Qwen Issue Triage
         if: steps.find_issues.outputs.issues_to_triage != '[]'
-        uses: google-gemini/gemini-cli-action@df3f890f003d28c60a2a09d2c29e0126e4d1e2ff
+        uses: QwenLM/qwen-code-action@bcde041471b6dbfa35b1fcb22acb6dff08216901
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
           ISSUES_TO_TRIAGE: ${{ steps.find_issues.outputs.issues_to_triage }}
           REPOSITORY: ${{ github.repository }}
         with:
           version: 0.1.8-rc.0
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          OTLP_GCP_WIF_PROVIDER: ${{ secrets.OTLP_GCP_WIF_PROVIDER }}
-          OTLP_GOOGLE_CLOUD_PROJECT: ${{ secrets.OTLP_GOOGLE_CLOUD_PROJECT }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           settings_json: |
             {
               "coreTools": [
@@ -61,10 +59,6 @@ jobs:
                 "run_shell_command(gh issue edit)",
                 "run_shell_command(gh issue list)"
               ],
-              "telemetry": {
-                "enabled": true,
-                "target": "gcp"
-              },
               "sandbox": false
             }
           prompt: |
