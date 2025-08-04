@@ -19,18 +19,11 @@ jobs:
       prs_needing_comment: ${{ steps.run_triage.outputs.prs_needing_comment }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: Generate GitHub App Token
-        id: generate_token
-        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+        uses: actions/checkout@5fd6818d04d64e87d255ee4d5f77995e32fbf4c2 # v4
 
       - name: Run PR Triage Script
         id: run_triage
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: ./.github/scripts/pr-triage.sh

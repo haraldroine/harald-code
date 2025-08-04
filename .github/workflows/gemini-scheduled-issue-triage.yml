@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Qwen Issue Triage
         if: steps.find_issues.outputs.issues_to_triage != '[]'
-        uses: QwenLM/qwen-code-action@0e2bad520d42f332a2ff1802e922c4aef63d9f5f
+        uses: QwenLM/qwen-code-action@5fd6818d04d64e87d255ee4d5f77995e32fbf4c2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUES_TO_TRIAGE: ${{ steps.find_issues.outputs.issues_to_triage }}
