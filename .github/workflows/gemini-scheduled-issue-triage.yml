@@ -44,6 +44,8 @@ jobs:
         with:
           version: 0.0.4
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
           settings_json: |
             {
               "coreTools": [
