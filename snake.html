@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snake Game</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background: #111;
+      color: #eee;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    h1 { margin: 1rem 0; }
+    #gameCanvas {
+      background: #222;
+      border: 2px solid #555;
+    }
+    #score {
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+    }
+    #gameOver {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 2rem 3rem;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+    #gameOver button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Snake</h1>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div id="score">Score: 0</div>
+
+  <div id="gameOver">
+    <h2>Game Over</h2>
+    <p>Your score: <span id="finalScore"></span></p>
+    <button id="restartBtn">Play Again</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const gameOverEl = document.getElementById('gameOver');
+    const finalScoreEl = document.getElementById('finalScore');
+    const restartBtn = document.getElementById('restartBtn');
+
+    const config = {
+      gridSize: 20,          // size of each cell (px)
+      rows: canvas.height / 20,
+      cols: canvas.width / 20,
+      speed: 100             // ms per frame (lower = faster)
+    };
+
+    let snake, food, direction, nextDirection, score, gameLoop;
+
+    function init() {
+      snake = [{x: 5, y: 5}, {x:4, y:5}, {x:3, y:5}];
+      direction = {x:1, y:0};
+      nextDirection = direction;
+      score = 0;
+      placeFood();
+      scoreEl.textContent = 'Score: 0';
+      gameOverEl.style.display = 'none';
+      clearInterval(gameLoop);
+      gameLoop = setInterval(update, config.speed);
+    }
+
+    function placeFood() {
+      let valid = false;
+      while (!valid) {
+        food = {
+          x: Math.floor(Math.random() * config.cols),
+          y: Math.floor(Math.random() * config.rows)
+        };
+        valid = !snake.some(seg => seg.x === food.x && seg.y === food.y);
+      }
+    }
+
+    function update() {
+      // Apply queued direction (prevent reverse)
+      if (!((nextDirection.x === -direction.x && nextDirection.y === -direction.y) ||
+          (nextDirection.x === direction.x && nextDirection.y === direction.y))) {
+        direction = nextDirection;
+      }
+
+      const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
+
+      // Wall collision
+      if (head.x < 0 || head.x >= config.cols || head.y < 0 || head.y >= config.rows) {
+        endGame();
+        return;
+      }
+
+      // Self collision
+      if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+        endGame();
+        return;
+      }
+
+      snake.unshift(head);
+
+      // Food check
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        scoreEl.textContent = 'Score: ' + score;
+        placeFood();
+      } else {
+        snake.pop(); // move forward
+      }
+
+      draw();
+    }
+
+    function draw() {
+      ctx.fillStyle = '#222';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw food
+      ctx.fillStyle = '#e74c3c';
+      ctx.fillRect(food.x * config.gridSize, food.y * config.gridSize,
+                   config.gridSize, config.gridSize);
+
+      // Draw snake
+      ctx.fillStyle = '#2ecc71';
+      snake.forEach((seg, i) => {
+        ctx.fillRect(seg.x * config.gridSize, seg.y * config.gridSize,
+                     config.gridSize, config.gridSize);
+      });
+    }
+
+    function endGame() {
+      clearInterval(gameLoop);
+      finalScoreEl.textContent = score;
+      gameOverEl.style.display = 'block';
+    }
+
+    // Keyboard handling
+    document.addEventListener('keydown', e => {
+      switch (e.key) {
+        case 'ArrowUp':    nextDirection = {x:0, y:-1}; break;
+        case 'ArrowDown':  nextDirection = {x:0, y:1};  break;
+        case 'ArrowLeft':  nextDirection = {x:-1, y:0}; break;
+        case 'ArrowRight': nextDirection = {x:1, y:0};  break;
+      }
+    });
+
+    restartBtn.addEventListener('click', init);
+
+    // Start the game
+    init();
+  </script>
+</body>
+</html>
