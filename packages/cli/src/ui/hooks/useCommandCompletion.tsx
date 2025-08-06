@@ -17,7 +17,7 @@ import {
   FileDiscoveryService,
   DEFAULT_FILE_FILTERING_OPTIONS,
   SHELL_SPECIAL_CHARS,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import { Suggestion } from '../components/SuggestionsDisplay.js';
 import { CommandContext, SlashCommand } from '../commands/types.js';
 import {

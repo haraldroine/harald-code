@@ -14,7 +14,7 @@ import {
   ToolExecuteConfirmationDetails,
   ToolMcpConfirmationDetails,
   Config,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import {
   RadioButtonSelect,
   RadioSelectItem,

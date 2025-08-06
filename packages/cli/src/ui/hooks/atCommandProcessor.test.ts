@@ -12,7 +12,7 @@ import {
   GlobTool,
   ReadManyFilesTool,
   ToolRegistry,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import * as os from 'os';
 import { ToolCallStatus } from '../types.js';
 import { UseHistoryManagerReturn } from './useHistoryManager.js';

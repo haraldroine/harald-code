@@ -74,8 +74,8 @@ export function getCoreSystemPrompt(
 
   // Check for system prompt mappings from global config
   if (config?.systemPromptMappings) {
-    const currentModel = process.env.OPENAI_MODEL || '';
-    const currentBaseUrl = process.env.OPENAI_BASE_URL || '';
+      const currentModel = process.env.CEREBRAS_MODEL || process.env.OPENAI_MODEL || '';
+  const currentBaseUrl = process.env.CEREBRAS_BASE_URL || process.env.OPENAI_BASE_URL || '';
 
     const matchedMapping = config.systemPromptMappings.find((mapping) => {
       const { baseUrls, modelNames } = mapping;

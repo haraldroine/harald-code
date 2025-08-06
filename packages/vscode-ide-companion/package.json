@@ -1,13 +1,13 @@
 {
-  "name": "qwen-code-vscode-ide-companion",
-  "displayName": "Qwen Code Companion",
-  "description": "Enable Qwen Code with direct access to your VS Code workspace.",
+  "name": "cerebras-code-vscode-ide-companion",
+  "displayName": "Cerebras Code Companion",
+  "description": "Enable Cerebras Code with direct access to your VS Code workspace.",
   "version": "0.0.4",
-  "publisher": "qwenlm",
+  "publisher": "cerebras",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/QwenLM/qwen-code.git",
+    "url": "https://github.com/haraldroine/cerebras-code.git",
     "directory": "packages/vscode-ide-companion"
   },
   "engines": {
@@ -19,10 +19,10 @@
     "AI"
   ],
   "keywords": [
-    "qwen-code",
-    "qwen code",
-    "qwen",
-    "qwen code",
+    "cerebras-code",
+    "cerebras code",
+    "cerebras",
+    "cerebras code",
     "cli",
     "ide integration",
     "ide companion"

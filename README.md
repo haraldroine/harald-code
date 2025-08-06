@@ -1,64 +1,53 @@
-# Qwen Code
+# Cerebras Code
 
-<div align="center">
+![Cerebras Code Screenshot](https://via.placeholder.com/800x400/1e293b/ffffff?text=Cerebras+Code)
 
-![Qwen Code Screenshot](./docs/assets/qwen-screenshot.png)
-
-[![npm version](https://img.shields.io/npm/v/@qwen-code/qwen-code.svg)](https://www.npmjs.com/package/@qwen-code/qwen-code)
-[![License](https://img.shields.io/github/license/QwenLM/qwen-code.svg)](./LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/haraldroine/cerebras-code)](https://github.com/haraldroine/cerebras-code/releases)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
-[![Downloads](https://img.shields.io/npm/dm/@qwen-code/qwen-code.svg)](https://www.npmjs.com/package/@qwen-code/qwen-code)
 
-**AI-powered command-line workflow tool for developers**
+**AI-powered command-line workflow tool for developers powered by Cerebras**
 
-[Installation](#installation) • [Quick Start](#quick-start) • [Features](#key-features) • [Documentation](./docs/) • [Contributing](./CONTRIBUTING.md)
+[Installation](#installation) • [Quick Start](#quick-start) • [Features](#features) • [Documentation](#documentation) • [Contributing](#contributing)
 
-</div>
+Cerebras Code is a powerful command-line AI workflow tool adapted from **Qwen Code** and **Gemini CLI**, specifically optimized for Cerebras models. It enhances your development workflow with advanced code understanding, automated tasks, and intelligent assistance using Cerebras's lightning-fast inference.
 
-Qwen Code is a powerful command-line AI workflow tool adapted from [**Gemini CLI**](https://github.com/google-gemini/gemini-cli) ([details](./README.gemini.md)), specifically optimized for [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) models. It enhances your development workflow with advanced code understanding, automated tasks, and intelligent assistance.
-
-> [!WARNING]
-> **Token Usage Notice**: Qwen Code may issue multiple API calls per cycle, resulting in higher token usage (similar to Claude Code). We're actively optimizing API efficiency.
->
-> 💡 **Free Option**: ModelScope provides **2,000 free API calls per day** for users in mainland China. OpenRouter offers up to **1,000 free API calls per day** worldwide. For setup instructions, see [API Configuration](#api-configuration).
+⚡ **Lightning Fast**: Powered by Cerebras's ultra-fast inference, get responses in milliseconds
+🧠 **Smart Defaults**: Uses `gpt-oss-120b` model by default for optimal code generation
+🔧 **Developer-Focused**: Built specifically for coding workflows and automation
 
 ## Key Features
 
-- **Code Understanding & Editing** - Query and edit large codebases beyond traditional context window limits
-- **Workflow Automation** - Automate operational tasks like handling pull requests and complex rebases
-- **Enhanced Parser** - Adapted parser specifically optimized for Qwen-Coder models
+* **Code Understanding & Editing** - Query and edit large codebases beyond traditional context window limits
+* **Workflow Automation** - Automate operational tasks like handling pull requests and complex rebases  
+* **Lightning-Fast Inference** - Powered by Cerebras's industry-leading inference speed
+* **Enhanced Parser** - Adapted parser specifically optimized for code generation models
 
 ## Installation
 
 ### Prerequisites
 
-Ensure you have [Node.js version 20](https://nodejs.org/en/download) or higher installed.
+Ensure you have Node.js version 20 or higher installed.
 
 ```bash
 curl -qL https://www.npmjs.com/install.sh | sh
 ```
 
-### Install from npm
-
-```bash
-npm install -g @qwen-code/qwen-code@latest
-qwen --version
-```
-
 ### Install from source
 
 ```bash
-git clone https://github.com/QwenLM/qwen-code.git
-cd qwen-code
+git clone https://github.com/haraldroine/cerebras-code.git
+cd cerebras-code
 npm install
+npm run build
 npm install -g .
 ```
 
 ## Quick Start
 
 ```bash
-# Start Qwen Code
-qwen
+# Start Cerebras Code
+cerebras
 
 # Example commands
 > Explain this codebase structure
@@ -72,7 +61,7 @@ Control your token usage with configurable session limits to optimize costs and 
 
 #### Configure Session Token Limit
 
-Create or edit `.qwen/settings.json` in your home directory:
+Create or edit `.cerebras/settings.json` in your home directory:
 
 ```json
 {
@@ -82,85 +71,63 @@ Create or edit `.qwen/settings.json` in your home directory:
 
 #### Session Commands
 
-- **`/compress`** - Compress conversation history to continue within token limits
-- **`/clear`** - Clear all conversation history and start fresh
-- **`/status`** - Check current token usage and limits
+* **`/compress`** - Compress conversation history to continue within token limits
+* **`/clear`** - Clear all conversation history and start fresh
+* **`/status`** - Check current token usage and limits
 
 > 📝 **Note**: Session token limit applies to a single conversation, not cumulative API calls.
 
 ### API Configuration
 
-Qwen Code supports multiple API providers. You can configure your API key through environment variables or a `.env` file in your project root.
+Cerebras Code supports multiple API providers. You can configure your API key through environment variables or a `.env` file in your project root.
 
 #### Configuration Methods
 
 1. **Environment Variables**
-
-   ```bash
-   export OPENAI_API_KEY="your_api_key_here"
-   export OPENAI_BASE_URL="your_api_endpoint"
-   export OPENAI_MODEL="your_model_choice"
-   ```
+```bash
+export CEREBRAS_API_KEY="your_api_key_here"
+export CEREBRAS_BASE_URL="https://api.cerebras.ai/v1"  # Default
+export CEREBRAS_MODEL="gpt-oss-120b"  # Default
+```
 
 2. **Project `.env` File**
-   Create a `.env` file in your project root:
-   ```env
-   OPENAI_API_KEY=your_api_key_here
-   OPENAI_BASE_URL=your_api_endpoint
-   OPENAI_MODEL=your_model_choice
-   ```
+Create a `.env` file in your project root:
+```bash
+CEREBRAS_API_KEY=your_api_key_here
+CEREBRAS_BASE_URL=https://api.cerebras.ai/v1
+CEREBRAS_MODEL=gpt-oss-120b
+```
 
 #### API Provider Options
 
-> ⚠️ **Regional Notice:**
->
-> - **Mainland China**: Use Alibaba Cloud Bailian or ModelScope
-> - **International**: Use Alibaba Cloud ModelStudio or OpenRouter
+**🚀 Cerebras Cloud (Recommended)**
 
-<details>
-<summary><b>🇨🇳 For Users in Mainland China</b></summary>
-
-**Option 1: Alibaba Cloud Bailian** ([Apply for API Key](https://bailian.console.aliyun.com/))
+Get your API key from [Cerebras Cloud](https://cloud.cerebras.ai/)
 
 ```bash
-export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"
-export OPENAI_MODEL="qwen3-coder-plus"
+export CEREBRAS_API_KEY="your_api_key_here"
+export CEREBRAS_BASE_URL="https://api.cerebras.ai/v1"
+export CEREBRAS_MODEL="gpt-oss-120b"  # Default model
 ```
 
-**Option 2: ModelScope (Free Tier)** ([Apply for API Key](https://modelscope.cn/docs/model-service/API-Inference/intro))
+**Available Models:**
+- `gpt-oss-120b` (Default - Best for code generation)
+- `llama3.1-8b`
+- `llama-3.3-70b`
+- `qwen-3-32b`
+- `qwen-3-235b-a22b-instruct-2507`
+- `llama-4-scout-17b-16e-instruct`
+- `llama-4-maverick-17b-128e-instruct`
 
-- ✅ **2,000 free API calls per day**
-- ⚠️ Connect your Aliyun account to avoid authentication errors
+**🔄 Backwards Compatibility**
+
+Cerebras Code also supports OpenAI-compatible environment variables:
 
 ```bash
-export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_BASE_URL="https://api-inference.modelscope.cn/v1"
-export OPENAI_MODEL="Qwen/Qwen3-Coder-480B-A35B-Instruct"
+export OPENAI_API_KEY="your_cerebras_api_key"
+export OPENAI_BASE_URL="https://api.cerebras.ai/v1"
+export OPENAI_MODEL="gpt-oss-120b"
 ```
-
-</details>
-
-<details>
-<summary><b>🌍 For International Users</b></summary>
-
-**Option 1: Alibaba Cloud ModelStudio** ([Apply for API Key](https://modelstudio.console.alibabacloud.com/))
-
-```bash
-export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_BASE_URL="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-export OPENAI_MODEL="qwen3-coder-plus"
-```
-
-**Option 2: OpenRouter (Free Tier Available)** ([Apply for API Key](https://openrouter.ai/))
-
-```bash
-export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
-export OPENAI_MODEL="qwen/qwen3-coder:free"
-```
-
-</details>
 
 ## Usage Examples
 
@@ -168,7 +135,7 @@ export OPENAI_MODEL="qwen/qwen3-coder:free"
 
 ```bash
 cd your-project/
-qwen
+cerebras
 
 # Architecture analysis
 > Describe the main pieces of this system's architecture
@@ -220,7 +187,7 @@ qwen
 
 ### 📚 Understand New Codebases
 
-```text
+```
 > What are the core business logic components?
 > What security mechanisms are in place?
 > How does the data flow through the system?
@@ -230,7 +197,7 @@ qwen
 
 ### 🔨 Code Refactoring & Optimization
 
-```text
+```
 > What parts of this module can be optimized?
 > Help me refactor this class to follow SOLID principles
 > Add proper error handling and logging
@@ -240,7 +207,7 @@ qwen
 
 ### 📝 Documentation & Testing
 
-```text
+```
 > Generate comprehensive JSDoc comments for all public APIs
 > Write unit tests with edge cases for this component
 > Create API documentation in OpenAPI format
@@ -250,7 +217,7 @@ qwen
 
 ### 🚀 Development Acceleration
 
-```text
+```
 > Set up a new Express server with authentication
 > Create a React component with TypeScript and tests
 > Implement a rate limiter middleware
@@ -262,43 +229,66 @@ qwen
 
 ### Session Commands
 
-- `/help` - Display available commands
-- `/clear` - Clear conversation history
-- `/compress` - Compress history to save tokens
-- `/status` - Show current session information
-- `/exit` or `/quit` - Exit Qwen Code
+* `/help` - Display available commands
+* `/clear` - Clear conversation history
+* `/compress` - Compress history to save tokens
+* `/status` - Show current session information
+* `/exit` or `/quit` - Exit Cerebras Code
 
 ### Keyboard Shortcuts
 
-- `Ctrl+C` - Cancel current operation
-- `Ctrl+D` - Exit (on empty line)
-- `Up/Down` - Navigate command history
+* `Ctrl+C` - Cancel current operation
+* `Ctrl+D` - Exit (on empty line)
+* `Up/Down` - Navigate command history
 
-## Benchmark Results
+## Performance Benchmarks
 
-### Terminal-Bench Performance
+Cerebras Code leverages Cerebras's industry-leading inference speed:
 
-| Agent     | Model              | Accuracy |
-| --------- | ------------------ | -------- |
-| Qwen Code | Qwen3-Coder-480A35 | 37.5%    |
-| Qwen Code | Qwen3-Coder-30BA3B | 31.3%    |
+| Model | Tokens/Second | Use Case |
+|-------|---------------|----------|
+| gpt-oss-120b | 1000+ | Code generation, refactoring |
+| llama3.1-8b | 2000+ | Quick queries, simple tasks |
+| qwen-3-32b | 1500+ | Code analysis, documentation |
 
 ## Development & Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) to learn how to contribute to the project.
+See [CONTRIBUTING.md](CONTRIBUTING.md) to learn how to contribute to the project.
 
 ## Troubleshooting
 
-If you encounter issues, check the [troubleshooting guide](docs/troubleshooting.md).
+### Common Issues
+
+**API Key Not Found**
+```bash
+Error: Cerebras API key is required (set CEREBRAS_API_KEY or OPENAI_API_KEY)
+```
+Solution: Set your API key in environment variables or `.env` file.
+
+**Model Not Available**
+```bash
+Error: Model 'xyz' not found
+```
+Solution: Use one of the supported models listed in the API Configuration section.
+
+**Connection Issues**
+```bash
+Error: Failed to connect to Cerebras API
+```
+Solution: Check your internet connection and API key validity.
 
 ## Acknowledgments
 
-This project is based on [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). We acknowledge and appreciate the excellent work of the Gemini CLI team. Our main contribution focuses on parser-level adaptations to better support Qwen-Coder models.
+This project is based on [Qwen Code](https://github.com/QwenLM/qwen-code) and [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). We acknowledge and appreciate the excellent work of both teams. Our main contribution focuses on optimizing for Cerebras's lightning-fast inference and providing seamless integration with Cerebras Cloud.
 
 ## License
 
-[LICENSE](./LICENSE)
+[Apache 2.0 License](LICENSE)
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=QwenLM/qwen-code&type=Date)](https://www.star-history.com/#QwenLM/qwen-code&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=haraldroine/cerebras-code&type=Date)](https://star-history.com/#haraldroine/cerebras-code&Date)
+
+---
+
+**Powered by Cerebras Cloud** ⚡

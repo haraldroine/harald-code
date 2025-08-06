@@ -21,7 +21,7 @@ import {
   getErrorMessage,
   isWithinRoot,
   getErrorStatus,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import * as acp from './acp.js';
 import { Agent } from './acp.js';
 import { Readable, Writable } from 'node:stream';

@@ -23,7 +23,7 @@ import {
   TelemetryTarget,
   FileFilteringOptions,
   IdeClient,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import { Settings } from './settings.js';
 
 import { Extension, annotateActiveExtensions } from './extension.js';

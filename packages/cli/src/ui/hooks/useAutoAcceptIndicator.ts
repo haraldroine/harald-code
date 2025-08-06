@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { useInput } from 'ink';
-import { ApprovalMode, type Config } from '@qwen-code/qwen-code-core';
+import { ApprovalMode, type Config } from '@cerebras-code/cerebras-code-core';
 
 export interface UseAutoAcceptIndicatorArgs {
   config: Config;

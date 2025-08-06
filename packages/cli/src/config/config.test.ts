@@ -9,7 +9,7 @@ import * as os from 'os';
 import { loadCliConfig, parseArguments, CliArgs } from './config.js';
 import { Settings } from './settings.js';
 import { Extension } from './extension.js';
-import * as ServerConfig from '@qwen-code/qwen-code-core';
+import * as ServerConfig from '@cerebras-code/cerebras-code-core';
 
 vi.mock('os', async (importOriginal) => {
   const actualOs = await importOriginal<typeof os>();
@@ -29,9 +29,9 @@ vi.mock('read-package-up', () => ({
   ),
 }));
 
-vi.mock('@qwen-code/qwen-code-core', async () => {
+vi.mock('@cerebras-code/cerebras-code-core', async () => {
   const actualServer = await vi.importActual<typeof ServerConfig>(
-    '@qwen-code/qwen-code-core',
+    '@cerebras-code/cerebras-code-core',
   );
   return {
     ...actualServer,

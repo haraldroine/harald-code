@@ -78,7 +78,7 @@ export function createContentGeneratorConfig(
   const googleApiKey = process.env.GOOGLE_API_KEY || undefined;
   const googleCloudProject = process.env.GOOGLE_CLOUD_PROJECT || undefined;
   const googleCloudLocation = process.env.GOOGLE_CLOUD_LOCATION || undefined;
-  const openaiApiKey = process.env.OPENAI_API_KEY;
+  const openaiApiKey = process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY;
 
   // Use runtime model from config if available; otherwise, fall back to parameter or default
   const effectiveModel = config.getModel() || DEFAULT_GEMINI_MODEL;
@@ -126,7 +126,7 @@ export function createContentGeneratorConfig(
   if (authType === AuthType.USE_OPENAI && openaiApiKey) {
     contentGeneratorConfig.apiKey = openaiApiKey;
     contentGeneratorConfig.model =
-      process.env.OPENAI_MODEL || DEFAULT_GEMINI_MODEL;
+              process.env.CEREBRAS_MODEL || process.env.OPENAI_MODEL || DEFAULT_GEMINI_MODEL;
 
     return contentGeneratorConfig;
   }
@@ -172,7 +172,7 @@ export async function createContentGenerator(
 
   if (config.authType === AuthType.USE_OPENAI) {
     if (!config.apiKey) {
-      throw new Error('OpenAI API key is required');
+              throw new Error('Cerebras API key is required (set CEREBRAS_API_KEY or OPENAI_API_KEY)');
     }
 
     // Import OpenAIContentGenerator dynamically to avoid circular dependencies

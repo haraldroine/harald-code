@@ -25,7 +25,7 @@ import {
   Status as ToolCallStatusType,
   ApprovalMode,
   Icon,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import {
   HistoryItemWithoutId,
   ToolCallStatus,
@@ -33,8 +33,8 @@ import {
 } from '../types.js';
 
 // Mocks
-vi.mock('@qwen-code/qwen-code-core', async () => {
-  const actual = await vi.importActual('@qwen-code/qwen-code-core');
+vi.mock('@cerebras-code/cerebras-code-core', async () => {
+  const actual = await vi.importActual('@cerebras-code/cerebras-code-core');
   return {
     ...actual,
     ToolRegistry: vi.fn(),

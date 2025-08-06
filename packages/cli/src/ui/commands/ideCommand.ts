@@ -10,7 +10,7 @@ import {
   IDEConnectionStatus,
   getIdeDisplayName,
   getIdeInstaller,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import {
   CommandContext,
   SlashCommand,

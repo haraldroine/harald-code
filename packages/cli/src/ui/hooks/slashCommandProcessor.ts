@@ -16,7 +16,7 @@ import {
   logSlashCommand,
   SlashCommandEvent,
   ToolConfirmationOutcome,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import { useSessionStats } from '../contexts/SessionContext.js';
 import {
   Message,

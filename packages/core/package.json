@@ -1,11 +1,12 @@
 {
-  "name": "@qwen-code/qwen-code-core",
+  "name": "@cerebras-code/cerebras-code-core",
   "version": "0.0.4",
-  "description": "Qwen Code Core",
+  "description": "Cerebras Code Core",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/QwenLM/qwen-code.git"
+    "url": "git+https://github.com/haraldroine/cerebras-code.git"
   },
+  "private": true,
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

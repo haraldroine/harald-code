@@ -20,14 +20,14 @@ import {
   Config,
   Config as ActualConfigType,
   ApprovalMode,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import { useInput, type Key as InkKey } from 'ink';
 
 vi.mock('ink');
 
-vi.mock('@qwen-code/qwen-code-core', async () => {
+vi.mock('@cerebras-code/cerebras-code-core', async () => {
   const actualServerModule = (await vi.importActual(
-    '@qwen-code/qwen-code-core',
+    '@cerebras-code/cerebras-code-core',
   )) as Record<string, unknown>;
   return {
     ...actualServerModule,

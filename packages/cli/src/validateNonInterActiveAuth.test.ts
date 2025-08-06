@@ -9,7 +9,7 @@ import {
   validateNonInteractiveAuth,
   NonInteractiveConfig,
 } from './validateNonInterActiveAuth.js';
-import { AuthType } from '@qwen-code/qwen-code-core';
+import { AuthType } from '@cerebras-code/cerebras-code-core';
 import * as auth from './config/auth.js';
 
 describe('validateNonInterActiveAuth', () => {

@@ -16,7 +16,7 @@ import {
   SandboxConfig,
   GeminiClient,
   ideContext,
-} from '@qwen-code/qwen-code-core';
+} from '@cerebras-code/cerebras-code-core';
 import { LoadedSettings, SettingsFile, Settings } from '../config/settings.js';
 import process from 'node:process';
 import { useGeminiStream } from './hooks/useGeminiStream.js';
@@ -86,10 +86,10 @@ interface MockServerConfig {
   getUserTier: Mock<() => Promise<string | undefined>>;
 }
 
-// Mock @qwen-code/qwen-code-core and its Config class
-vi.mock('@qwen-code/qwen-code-core', async (importOriginal) => {
+// Mock @cerebras-code/cerebras-code-core and its Config class
+vi.mock('@cerebras-code/cerebras-code-core', async (importOriginal) => {
   const actualCore =
-    await importOriginal<typeof import('@qwen-code/qwen-code-core')>();
+    await importOriginal<typeof import('@cerebras-code/cerebras-code-core')>();
   const ConfigClassMock = vi
     .fn()
     .mockImplementation((optionsPassedToConstructor) => {
@@ -239,7 +239,7 @@ vi.mock('./config/auth.js', () => ({
 
 const mockedCheckForUpdates = vi.mocked(checkForUpdates);
 const { isGitRepository: mockedIsGitRepository } = vi.mocked(
-  await import('@qwen-code/qwen-code-core'),
+  await import('@cerebras-code/cerebras-code-core'),
 );
 
 vi.mock('node:child_process');

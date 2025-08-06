@@ -93,7 +93,7 @@ export class OpenAIContentGenerator implements ContentGenerator {
   constructor(apiKey: string, model: string, config: Config) {
     this.model = model;
     this.config = config;
-    const baseURL = process.env.OPENAI_BASE_URL || '';
+    const baseURL = process.env.CEREBRAS_BASE_URL || process.env.OPENAI_BASE_URL || 'https://api.cerebras.ai/v1';
 
     // Configure timeout settings - using progressive timeouts
     const timeoutConfig = {
