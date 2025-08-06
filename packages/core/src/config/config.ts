@@ -201,6 +201,7 @@ export interface ConfigParameters {
     timeout?: number;
     maxRetries?: number;
   };
+  settings?: any; // Settings object for API key rotation and other features
 }
 
 export class Config {
@@ -273,6 +274,7 @@ export class Config {
     timeout?: number;
     maxRetries?: number;
   };
+  private readonly settings?: any; // Settings object for API key rotation
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
     this.embeddingModel =
@@ -337,6 +339,7 @@ export class Config {
     this.enableOpenAILogging = params.enableOpenAILogging ?? false;
     this.sampling_params = params.sampling_params;
     this.contentGenerator = params.contentGenerator;
+    this.settings = params.settings;
 
     if (params.contextFileName) {
       setGeminiMdFilename(params.contextFileName);
@@ -380,7 +383,7 @@ export class Config {
 
     // Create and initialize new client in local variable first
     const newGeminiClient = new GeminiClient(this);
-    await newGeminiClient.initialize(newContentGeneratorConfig);
+    await newGeminiClient.initialize(newContentGeneratorConfig, this.settings);
 
     // Only assign to instance properties after successful initialization
     this.contentGeneratorConfig = newContentGeneratorConfig;

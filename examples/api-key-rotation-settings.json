@@ -1,0 +1,18 @@
+{
+  "comment": "Example settings.json with API key rotation configured",
+  "selectedAuthType": "USE_OPENAI",
+  "model": "gpt-oss-120b",
+  "apiKeyRotation": {
+    "apiKeys": [
+      "csk-your-first-cerebras-api-key-here",
+      "csk-your-second-cerebras-api-key-here",
+      "csk-your-third-cerebras-api-key-here"
+    ],
+    "currentKeyIndex": 0,
+    "autoRotateOnRateLimit": true,
+    "resetRotationDaily": true,
+    "dailyUsageTracking": {}
+  },
+  "enableOpenAILogging": false,
+  "sessionTokenLimit": 32000
+}

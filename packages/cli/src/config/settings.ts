@@ -63,6 +63,19 @@ export interface AccessibilitySettings {
   disableLoadingPhrases?: boolean;
 }
 
+export interface ApiKeyRotationSettings {
+  /** List of API keys to rotate between */
+  apiKeys?: string[];
+  /** Current active key index */
+  currentKeyIndex?: number;
+  /** Whether to enable automatic rotation on rate limits */
+  autoRotateOnRateLimit?: boolean;
+  /** Reset rotation daily (to handle daily limits) */
+  resetRotationDaily?: boolean;
+  /** Track usage per key per day */
+  dailyUsageTracking?: Record<string, { date: string; requests: number }>;
+}
+
 export interface Settings {
   theme?: string;
   customThemes?: Record<string, CustomTheme>;
@@ -89,6 +102,8 @@ export interface Settings {
   /** The model name to use (e.g 'gemini-9.0-pro') */
   model?: string;
   enableOpenAILogging?: boolean;
+  /** API key rotation configuration */
+  apiKeyRotation?: ApiKeyRotationSettings;
 
   // Git-aware file filtering settings
   fileFiltering?: {

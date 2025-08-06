@@ -41,7 +41,7 @@ export const validateAuthMethod = (authMethod: string): string | null => {
 
   if (authMethod === AuthType.USE_OPENAI) {
     if (!process.env.CEREBRAS_API_KEY && !process.env.OPENAI_API_KEY) {
-      return 'CEREBRAS_API_KEY or OPENAI_API_KEY environment variable not found. You can enter it interactively or add it to your .env file.';
+      return 'CEREBRAS_API_KEY or OPENAI_API_KEY environment variable not found. You can enter it interactively, add it to your .env file, or configure multiple API keys in settings.json for automatic rotation.';
     }
     return null;
   }

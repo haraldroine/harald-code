@@ -119,6 +119,28 @@ export CEREBRAS_MODEL="gpt-oss-120b"  # Default model
 - `llama-4-scout-17b-16e-instruct`
 - `llama-4-maverick-17b-128e-instruct`
 
+**🔄 API Key Rotation (New!)**
+
+Avoid rate limits by configuring multiple API keys for automatic rotation:
+
+```bash
+# Add multiple API keys via CLI
+cerebras
+> /api-keys add csk-your-first-key
+> /api-keys add csk-your-second-key  
+> /api-keys add csk-your-third-key
+
+# Check rotation status
+> /api-keys status
+```
+
+Benefits:
+- **Automatic switching** when rate limits are hit
+- **3x daily free usage** with 3 Cerebras accounts (3M tokens/day)
+- **Zero downtime** - seamless key rotation in background
+
+See the [API Key Rotation Guide](docs/api-key-rotation.md) for detailed setup instructions.
+
 **🔄 Backwards Compatibility**
 
 Cerebras Code also supports OpenAI-compatible environment variables:

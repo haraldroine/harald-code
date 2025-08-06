@@ -497,6 +497,7 @@ export async function loadCliConfig(
       },
     ],
     contentGenerator: settings.contentGenerator,
+    settings, // Pass settings for API key rotation and other features
   });
 }
 

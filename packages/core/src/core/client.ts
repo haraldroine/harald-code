@@ -120,11 +120,12 @@ export class GeminiClient {
     this.lastPromptId = this.config.getSessionId();
   }
 
-  async initialize(contentGeneratorConfig: ContentGeneratorConfig) {
+  async initialize(contentGeneratorConfig: ContentGeneratorConfig, settings?: any) {
     this.contentGenerator = await createContentGenerator(
       contentGeneratorConfig,
       this.config,
       this.config.getSessionId(),
+      settings,
     );
     this.chat = await this.startChat();
   }
@@ -564,11 +565,21 @@ export class GeminiClient {
           this.lastPromptId,
         );
 
-      const result = await retryWithBackoff(apiCall, {
-        onPersistent429: async (authType?: string, error?: unknown) =>
-          await this.handleFlashFallback(authType, error),
-        authType: this.config.getContentGeneratorConfig()?.authType,
-      });
+      // Check if the content generator has its own retry logic (e.g., API key rotation)
+      const hasInternalRetryLogic = (this.getContentGenerator() as any).rotationManager !== undefined;
+      
+      let result;
+      if (hasInternalRetryLogic) {
+        // Content generator handles retries internally (e.g., with API key rotation)
+        result = await apiCall();
+      } else {
+        // Use external retry logic for content generators without internal retry handling
+        result = await retryWithBackoff(apiCall, {
+          onPersistent429: async (authType?: string, error?: unknown) =>
+            await this.handleFlashFallback(authType, error),
+          authType: this.config.getContentGeneratorConfig()?.authType,
+        });
+      }
       const functionCalls = getFunctionCalls(result);
       if (functionCalls && functionCalls.length > 0) {
         const functionCall = functionCalls.find(
@@ -639,11 +650,21 @@ export class GeminiClient {
           this.lastPromptId,
         );
 
-      const result = await retryWithBackoff(apiCall, {
-        onPersistent429: async (authType?: string, error?: unknown) =>
-          await this.handleFlashFallback(authType, error),
-        authType: this.config.getContentGeneratorConfig()?.authType,
-      });
+      // Check if the content generator has its own retry logic (e.g., API key rotation)
+      const hasInternalRetryLogic = (this.getContentGenerator() as any).rotationManager !== undefined;
+      
+      let result;
+      if (hasInternalRetryLogic) {
+        // Content generator handles retries internally (e.g., with API key rotation)
+        result = await apiCall();
+      } else {
+        // Use external retry logic for content generators without internal retry handling
+        result = await retryWithBackoff(apiCall, {
+          onPersistent429: async (authType?: string, error?: unknown) =>
+            await this.handleFlashFallback(authType, error),
+          authType: this.config.getContentGeneratorConfig()?.authType,
+        });
+      }
       return result;
     } catch (error: unknown) {
       if (abortSignal.aborted) {

@@ -138,6 +138,7 @@ export async function createContentGenerator(
   config: ContentGeneratorConfig,
   gcConfig: Config,
   sessionId?: string,
+  settings?: any,
 ): Promise<ContentGenerator> {
   const version = process.env.CLI_VERSION || process.version;
   const httpOptions = {
@@ -180,8 +181,28 @@ export async function createContentGenerator(
       './openaiContentGenerator.js'
     );
 
+    // Create API key rotation manager if multiple keys are configured
+    let rotationManager;
+    if (settings?.apiKeyRotation?.apiKeys && settings.apiKeyRotation.apiKeys.length > 0) {
+      const { ApiKeyRotationManager } = await import('./apiKeyRotationManager.js');
+      
+      rotationManager = new ApiKeyRotationManager(
+        {
+          settings: settings.apiKeyRotation,
+          onSettingsUpdate: async (newSettings) => {
+            // Update settings when rotation manager changes state
+            if (settings) {
+              settings.apiKeyRotation = newSettings;
+              console.log('API key rotation settings updated');
+            }
+          }
+        },
+        config.apiKey // Use the original API key as fallback
+      );
+    }
+
     // Always use OpenAIContentGenerator, logging is controlled by enableOpenAILogging flag
-    return new OpenAIContentGenerator(config.apiKey, config.model, gcConfig);
+    return new OpenAIContentGenerator(config.apiKey, config.model, gcConfig, rotationManager);
   }
 
   throw new Error(

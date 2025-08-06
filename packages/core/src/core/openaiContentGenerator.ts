@@ -26,6 +26,7 @@ import { logApiResponse } from '../telemetry/loggers.js';
 import { ApiResponseEvent } from '../telemetry/types.js';
 import { Config } from '../config/config.js';
 import { openaiLogger } from '../utils/openaiLogger.js';
+import { ApiKeyRotationManager } from './apiKeyRotationManager.js';
 
 // OpenAI API type definitions for logging
 interface OpenAIToolCall {
@@ -81,6 +82,7 @@ export class OpenAIContentGenerator implements ContentGenerator {
   private client: OpenAI;
   private model: string;
   private config: Config;
+  private rotationManager?: ApiKeyRotationManager;
   private streamingToolCalls: Map<
     number,
     {
@@ -90,17 +92,18 @@ export class OpenAIContentGenerator implements ContentGenerator {
     }
   > = new Map();
 
-  constructor(apiKey: string, model: string, config: Config) {
+  constructor(apiKey: string, model: string, config: Config, rotationManager?: ApiKeyRotationManager) {
     this.model = model;
     this.config = config;
+    this.rotationManager = rotationManager;
     const baseURL = process.env.CEREBRAS_BASE_URL || process.env.OPENAI_BASE_URL || 'https://api.cerebras.ai/v1';
 
     // Configure timeout settings - using progressive timeouts
     const timeoutConfig = {
-      // Base timeout for most requests (2 minutes)
-      timeout: 120000,
-      // Maximum retries for failed requests
-      maxRetries: 3,
+      // Base timeout for most requests (10 seconds - very fast failure for rate limits)
+      timeout: 10000,
+      // Maximum retries for failed requests (no retries at client level)
+      maxRetries: 0,
       // HTTP client options
       httpAgent: undefined, // Let the client use default agent
     };
@@ -123,13 +126,113 @@ export class OpenAIContentGenerator implements ContentGenerator {
         }
       : undefined;
 
-    this.client = new OpenAI({
+    this.client = this.createClient(apiKey, baseURL, timeoutConfig, defaultHeaders);
+  }
+
+  /**
+   * Create OpenAI client with given configuration
+   */
+  private createClient(
+    apiKey: string,
+    baseURL: string,
+    timeoutConfig: { timeout: number; maxRetries: number },
+    defaultHeaders?: Record<string, string>
+  ): OpenAI {
+    return new OpenAI({
       apiKey,
       baseURL,
       timeout: timeoutConfig.timeout,
       maxRetries: timeoutConfig.maxRetries,
       defaultHeaders,
     });
+  }
+
+  /**
+   * Get current API key (from rotation manager or fallback)
+   */
+  private getCurrentApiKey(): string {
+    if (this.rotationManager) {
+      const rotatedKey = this.rotationManager.getCurrentApiKey();
+      if (rotatedKey) {
+        return rotatedKey;
+      }
+    }
+    // Fallback to environment variables if no rotation manager or no keys
+    return process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY || '';
+  }
+
+  /**
+   * Recreate client with current API key
+   */
+  private recreateClientWithCurrentKey(): void {
+    const currentApiKey = this.getCurrentApiKey();
+    if (!currentApiKey) {
+      throw new Error('No API key available for OpenAI client');
+    }
+
+    console.log(`🔄 Recreating OpenAI client with key: ...${currentApiKey.slice(-4)}`);
+    const baseURL = process.env.CEREBRAS_BASE_URL || process.env.OPENAI_BASE_URL || 'https://api.cerebras.ai/v1';
+    
+    // Configure timeout settings
+    const timeoutConfig = {
+      timeout: 120000,
+      maxRetries: 3,
+    };
+
+    const contentGeneratorConfig = this.config.getContentGeneratorConfig();
+    if (contentGeneratorConfig?.timeout) {
+      timeoutConfig.timeout = contentGeneratorConfig.timeout;
+    }
+    if (contentGeneratorConfig?.maxRetries !== undefined) {
+      timeoutConfig.maxRetries = contentGeneratorConfig.maxRetries;
+    }
+
+    // Check if using OpenRouter and add required headers
+    const isOpenRouter = baseURL.includes('openrouter.ai');
+    const defaultHeaders = isOpenRouter
+      ? {
+          'HTTP-Referer': 'https://github.com/QwenLM/qwen-code.git',
+          'X-Title': 'Qwen Code',
+        }
+      : undefined;
+
+    this.client = this.createClient(currentApiKey, baseURL, timeoutConfig, defaultHeaders);
+  }
+
+  /**
+   * Handle rate limit error and attempt key rotation
+   */
+  private async handleRateLimitWithRotation(error: unknown): Promise<boolean> {
+    if (!this.rotationManager) {
+      return false; // No rotation available
+    }
+
+    if (!ApiKeyRotationManager.isRateLimitError(error)) {
+      return false; // Not a rate limit error
+    }
+
+    console.log('Rate limit detected, attempting API key rotation...');
+    
+    try {
+      const oldApiKey = this.getCurrentApiKey();
+      console.log(`🔑 Current key before rotation: ...${oldApiKey?.slice(-4) || 'unknown'}`);
+      
+      const newApiKey = await this.rotationManager.handleRateLimit(error);
+      console.log(`🔑 New key after rotation: ...${newApiKey?.slice(-4) || 'unknown'}`);
+      
+      if (newApiKey && newApiKey !== oldApiKey) {
+        // Recreate client with new key
+        this.recreateClientWithCurrentKey();
+        console.log('✅ Successfully rotated to new API key');
+        return true;
+      } else {
+        console.log('⚠️ No new key available or same key returned');
+      }
+    } catch (rotationError) {
+      console.error('❌ Failed to rotate API key:', rotationError);
+    }
+
+    return false;
   }
 
   /**
@@ -171,63 +274,100 @@ export class OpenAIContentGenerator implements ContentGenerator {
     const startTime = Date.now();
     const messages = this.convertToOpenAIFormat(request);
 
-    try {
-      // Build sampling parameters with clear priority:
-      // 1. Request-level parameters (highest priority)
-      // 2. Config-level sampling parameters (medium priority)
-      // 3. Default values (lowest priority)
-      const samplingParams = this.buildSamplingParameters(request);
+    // Track usage for current API key
+    if (this.rotationManager) {
+      const currentKey = this.getCurrentApiKey();
+      if (currentKey) {
+        await this.rotationManager.trackUsage(currentKey);
+      }
+    }
 
-      const createParams: Parameters<
-        typeof this.client.chat.completions.create
-      >[0] = {
-        model: this.model,
-        messages,
-        ...samplingParams,
-      };
+    // Retry logic with API key rotation (reduced for faster failure)
+    const maxRetries = 2; // Only 2 attempts total for faster rotation
+    let lastError: unknown;
 
-      if (request.config?.tools) {
-        createParams.tools = await this.convertGeminiToolsToOpenAI(
-          request.config.tools,
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        // Ensure we have the current API key for this attempt
+        if (attempt > 0) {
+          this.recreateClientWithCurrentKey();
+        }
+
+        // Build sampling parameters with clear priority:
+        // 1. Request-level parameters (highest priority)
+        // 2. Config-level sampling parameters (medium priority)
+        // 3. Default values (lowest priority)
+        const samplingParams = this.buildSamplingParameters(request);
+
+        const createParams: Parameters<
+          typeof this.client.chat.completions.create
+        >[0] = {
+          model: this.model,
+          messages,
+          ...samplingParams,
+        };
+
+        if (request.config?.tools) {
+          createParams.tools = await this.convertGeminiToolsToOpenAI(
+            request.config.tools,
+          );
+        }
+        // console.log('createParams', createParams);
+        const completion = (await this.client.chat.completions.create(
+          createParams,
+        )) as OpenAI.Chat.ChatCompletion;
+
+        const response = this.convertToGeminiFormat(completion);
+        const durationMs = Date.now() - startTime;
+
+        // Log API response event for UI telemetry
+        const responseEvent = new ApiResponseEvent(
+          this.model,
+          durationMs,
+          `openai-${Date.now()}`, // Generate a prompt ID
+          this.config.getContentGeneratorConfig()?.authType,
+          response.usageMetadata,
         );
+
+        logApiResponse(this.config, responseEvent);
+
+        // Log interaction if enabled
+        if (this.config.getContentGeneratorConfig()?.enableOpenAILogging) {
+          const openaiRequest = await this.convertGeminiRequestToOpenAI(request);
+          const openaiResponse = this.convertGeminiResponseToOpenAI(response);
+          await openaiLogger.logInteraction(openaiRequest, openaiResponse);
+        }
+
+        return response;
+      } catch (error) {
+        lastError = error;
+        
+        // Try to handle rate limit with rotation
+        const rotationSuccessful = await this.handleRateLimitWithRotation(error);
+        
+        if (rotationSuccessful && attempt < maxRetries - 1) {
+          console.log(`Retrying request with new API key (attempt ${attempt + 2}/${maxRetries})`);
+          continue; // Retry with new key
+        }
+        
+        // If this is the last attempt or rotation failed, break out of retry loop
+        if (attempt === maxRetries - 1 || !rotationSuccessful) {
+          break;
+        }
       }
-      // console.log('createParams', createParams);
-      const completion = (await this.client.chat.completions.create(
-        createParams,
-      )) as OpenAI.Chat.ChatCompletion;
+    }
 
-      const response = this.convertToGeminiFormat(completion);
-      const durationMs = Date.now() - startTime;
-
-      // Log API response event for UI telemetry
-      const responseEvent = new ApiResponseEvent(
-        this.model,
-        durationMs,
-        `openai-${Date.now()}`, // Generate a prompt ID
-        this.config.getContentGeneratorConfig()?.authType,
-        response.usageMetadata,
-      );
-
-      logApiResponse(this.config, responseEvent);
-
-      // Log interaction if enabled
-      if (this.config.getContentGeneratorConfig()?.enableOpenAILogging) {
-        const openaiRequest = await this.convertGeminiRequestToOpenAI(request);
-        const openaiResponse = this.convertGeminiResponseToOpenAI(response);
-        await openaiLogger.logInteraction(openaiRequest, openaiResponse);
-      }
-
-      return response;
-    } catch (error) {
+    // If we get here, all retries failed
+    if (lastError) {
       const durationMs = Date.now() - startTime;
 
       // Identify timeout errors specifically
-      const isTimeoutError = this.isTimeoutError(error);
+      const isTimeoutError = this.isTimeoutError(lastError);
       const errorMessage = isTimeoutError
         ? `Request timeout after ${Math.round(durationMs / 1000)}s. Try reducing input length or increasing timeout in config.`
-        : error instanceof Error
-          ? error.message
-          : String(error);
+        : lastError instanceof Error
+          ? lastError.message
+          : String(lastError);
 
       // Estimate token usage even when there's an error
       // This helps track costs and usage even for failed requests
@@ -271,7 +411,7 @@ export class OpenAIContentGenerator implements ContentGenerator {
         await openaiLogger.logInteraction(
           openaiRequest,
           undefined,
-          error as Error,
+          lastError as Error,
         );
       }
 
@@ -290,6 +430,9 @@ export class OpenAIContentGenerator implements ContentGenerator {
 
       throw new Error(`OpenAI API error: ${errorMessage}`);
     }
+
+    // This should never be reached, but just in case
+    throw new Error('Unknown error occurred during API request');
   }
 
   async generateContentStream(
@@ -298,85 +441,103 @@ export class OpenAIContentGenerator implements ContentGenerator {
     const startTime = Date.now();
     const messages = this.convertToOpenAIFormat(request);
 
-    try {
-      // Build sampling parameters with clear priority
-      const samplingParams = this.buildSamplingParameters(request);
-
-      const createParams: Parameters<
-        typeof this.client.chat.completions.create
-      >[0] = {
-        model: this.model,
-        messages,
-        ...samplingParams,
-        stream: true,
-        stream_options: { include_usage: true },
-      };
-
-      if (request.config?.tools) {
-        createParams.tools = await this.convertGeminiToolsToOpenAI(
-          request.config.tools,
-        );
+    // Track usage for current API key
+    if (this.rotationManager) {
+      const currentKey = this.getCurrentApiKey();
+      if (currentKey) {
+        await this.rotationManager.trackUsage(currentKey);
       }
+    }
 
-      // console.log('createParams', createParams);
+    // Retry logic with API key rotation for streaming
+    const maxRetries = 2;
+    let lastError: unknown;
 
-      const stream = (await this.client.chat.completions.create(
-        createParams,
-      )) as AsyncIterable<OpenAI.Chat.ChatCompletionChunk>;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        // Ensure we have the current API key for this attempt
+        if (attempt > 0) {
+          this.recreateClientWithCurrentKey();
+        }
 
-      const originalStream = this.streamGenerator(stream);
+        // Build sampling parameters with clear priority
+        const samplingParams = this.buildSamplingParameters(request);
 
-      // Collect all responses for final logging (don't log during streaming)
-      const responses: GenerateContentResponse[] = [];
+        const createParams: Parameters<
+          typeof this.client.chat.completions.create
+        >[0] = {
+          model: this.model,
+          messages,
+          ...samplingParams,
+          stream: true,
+          stream_options: { include_usage: true },
+        };
 
-      // Return a new generator that both yields responses and collects them
-      const wrappedGenerator = async function* (this: OpenAIContentGenerator) {
-        try {
-          for await (const response of originalStream) {
-            responses.push(response);
-            yield response;
-          }
-
-          const durationMs = Date.now() - startTime;
-
-          // Get final usage metadata from the last response that has it
-          const finalUsageMetadata = responses
-            .slice()
-            .reverse()
-            .find((r) => r.usageMetadata)?.usageMetadata;
-
-          // Log API response event for UI telemetry
-          const responseEvent = new ApiResponseEvent(
-            this.model,
-            durationMs,
-            `openai-stream-${Date.now()}`, // Generate a prompt ID
-            this.config.getContentGeneratorConfig()?.authType,
-            finalUsageMetadata,
+        if (request.config?.tools) {
+          createParams.tools = await this.convertGeminiToolsToOpenAI(
+            request.config.tools,
           );
+        }
 
-          logApiResponse(this.config, responseEvent);
+        // console.log('createParams', createParams);
 
-          // Log interaction if enabled (same as generateContent method)
-          if (this.config.getContentGeneratorConfig()?.enableOpenAILogging) {
-            const openaiRequest =
-              await this.convertGeminiRequestToOpenAI(request);
-            // For streaming, we combine all responses into a single response for logging
-            const combinedResponse =
-              this.combineStreamResponsesForLogging(responses);
-            const openaiResponse =
-              this.convertGeminiResponseToOpenAI(combinedResponse);
-            await openaiLogger.logInteraction(openaiRequest, openaiResponse);
-          }
-        } catch (error) {
+        const stream = (await this.client.chat.completions.create(
+          createParams,
+        )) as AsyncIterable<OpenAI.Chat.ChatCompletionChunk>;
+
+        const originalStream = this.streamGenerator(stream);
+
+        // Collect all responses for final logging (don't log during streaming)
+        const responses: GenerateContentResponse[] = [];
+
+        // Return a new generator that both yields responses and collects them
+        const wrappedGenerator = async function* (this: OpenAIContentGenerator) {
+          try {
+            for await (const response of originalStream) {
+              responses.push(response);
+              yield response;
+            }
+
+            const durationMs = Date.now() - startTime;
+
+            // Get final usage metadata from the last response that has it
+            const finalUsageMetadata = responses
+              .slice()
+              .reverse()
+              .find((r) => r.usageMetadata)?.usageMetadata;
+
+            // Log API response event for UI telemetry
+            const responseEvent = new ApiResponseEvent(
+              this.model,
+              durationMs,
+              `openai-stream-${Date.now()}`, // Generate a prompt ID
+              this.config.getContentGeneratorConfig()?.authType,
+              finalUsageMetadata,
+            );
+
+            logApiResponse(this.config, responseEvent);
+
+            // Log interaction if enabled (same as generateContent method)
+            if (this.config.getContentGeneratorConfig()?.enableOpenAILogging) {
+              const openaiRequest =
+                await this.convertGeminiRequestToOpenAI(request);
+              // For streaming, we combine all responses into a single response for logging
+              const combinedResponse =
+                this.combineStreamResponsesForLogging(responses);
+              const openaiResponse =
+                this.convertGeminiResponseToOpenAI(combinedResponse);
+              await openaiLogger.logInteraction(openaiRequest, openaiResponse);
+            }
+          } catch (streamError) {
           const durationMs = Date.now() - startTime;
 
           // Identify timeout errors specifically for streaming
-          const isTimeoutError = this.isTimeoutError(error);
+          const isTimeoutError = this.isTimeoutError(streamError);
           const errorMessage = isTimeoutError
             ? `Streaming request timeout after ${Math.round(durationMs / 1000)}s. Try reducing input length or increasing timeout in config.`
-            : error instanceof Error
-              ? error.message
-              : String(error);
+            : streamError instanceof Error
+              ? streamError.message
+              : String(streamError);
 
           // Estimate token usage even when there's an error in streaming
           let estimatedUsage;
@@ -420,7 +581,7 @@ export class OpenAIContentGenerator implements ContentGenerator {
             await openaiLogger.logInteraction(
               openaiRequest,
               undefined,
-              error as Error,
+              streamError as Error,
             );
           }
 
@@ -435,21 +596,40 @@ export class OpenAIContentGenerator implements ContentGenerator {
             );
           }
 
-          throw error;
+          throw streamError;
         }
       }.bind(this);
 
-      return wrappedGenerator();
-    } catch (error) {
+              return wrappedGenerator();
+      } catch (error) {
+        lastError = error;
+        
+        // Try to handle rate limit with rotation
+        const rotationSuccessful = await this.handleRateLimitWithRotation(error);
+        
+        if (rotationSuccessful && attempt < maxRetries - 1) {
+          console.log(`Retrying streaming request with new API key (attempt ${attempt + 2}/${maxRetries})`);
+          continue; // Retry with new key
+        }
+        
+        // If this is the last attempt or rotation failed, break out of retry loop
+        if (attempt === maxRetries - 1 || !rotationSuccessful) {
+          break;
+        }
+      }
+    }
+
+    // If we get here, all retries failed - handle the error
+    if (lastError) {
       const durationMs = Date.now() - startTime;
 
       // Identify timeout errors specifically for streaming setup
-      const isTimeoutError = this.isTimeoutError(error);
+      const isTimeoutError = this.isTimeoutError(lastError);
       const errorMessage = isTimeoutError
         ? `Streaming setup timeout after ${Math.round(durationMs / 1000)}s. Try reducing input length or increasing timeout in config.`
-        : error instanceof Error
-          ? error.message
-          : String(error);
+        : lastError instanceof Error
+          ? lastError.message
+          : String(lastError);
 
       // Estimate token usage even when there's an error in streaming setup
       let estimatedUsage;
@@ -501,6 +681,9 @@ export class OpenAIContentGenerator implements ContentGenerator {
 
       throw new Error(`OpenAI API error: ${errorMessage}`);
     }
+
+    // This should never be reached, but just in case
+    throw new Error('Unknown error occurred during streaming API request');
   }
 
   private async *streamGenerator(

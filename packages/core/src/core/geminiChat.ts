@@ -297,18 +297,27 @@ export class GeminiChat {
         );
       };
 
-      response = await retryWithBackoff(apiCall, {
-        shouldRetry: (error: Error) => {
-          if (error && error.message) {
-            if (error.message.includes('429')) return true;
-            if (error.message.match(/5\d{2}/)) return true;
-          }
-          return false;
-        },
-        onPersistent429: async (authType?: string, error?: unknown) =>
-          await this.handleFlashFallback(authType, error),
-        authType: this.config.getContentGeneratorConfig()?.authType,
-      });
+      // Check if the content generator has its own retry logic (e.g., API key rotation)
+      const hasInternalRetryLogic = (this.contentGenerator as any).rotationManager !== undefined;
+      
+      if (hasInternalRetryLogic) {
+        // Content generator handles retries internally (e.g., with API key rotation)
+        response = await apiCall();
+      } else {
+        // Use external retry logic for content generators without internal retry handling
+        response = await retryWithBackoff(apiCall, {
+          shouldRetry: (error: Error) => {
+            if (error && error.message) {
+              if (error.message.includes('429')) return true;
+              if (error.message.match(/5\d{2}/)) return true;
+            }
+            return false;
+          },
+          onPersistent429: async (authType?: string, error?: unknown) =>
+            await this.handleFlashFallback(authType, error),
+          authType: this.config.getContentGeneratorConfig()?.authType,
+        });
+      }
       const durationMs = Date.now() - startTime;
       await this._logApiResponse(
         durationMs,
@@ -407,23 +416,34 @@ export class GeminiChat {
         );
       };
 
-      // Note: Retrying streams can be complex. If generateContentStream itself doesn't handle retries
-      // for transient issues internally before yielding the async generator, this retry will re-initiate
-      // the stream. For simple 429/500 errors on initial call, this is fine.
-      // If errors occur mid-stream, this setup won't resume the stream; it will restart it.
-      const streamResponse = await retryWithBackoff(apiCall, {
-        shouldRetry: (error: Error) => {
-          // Check error messages for status codes, or specific error names if known
-          if (error && error.message) {
-            if (error.message.includes('429')) return true;
-            if (error.message.match(/5\d{2}/)) return true;
-          }
-          return false; // Don't retry other errors by default
-        },
-        onPersistent429: async (authType?: string, error?: unknown) =>
-          await this.handleFlashFallback(authType, error),
-        authType: this.config.getContentGeneratorConfig()?.authType,
-      });
+      // Check if the content generator has its own retry logic (e.g., API key rotation)
+      // If so, skip the external retry wrapper to avoid double-retrying
+      const hasInternalRetryLogic = (this.contentGenerator as any).rotationManager !== undefined;
+      
+      let streamResponse;
+      if (hasInternalRetryLogic) {
+        // Content generator handles retries internally (e.g., with API key rotation)
+        streamResponse = await apiCall();
+      } else {
+        // Use external retry logic for content generators without internal retry handling
+        // Note: Retrying streams can be complex. If generateContentStream itself doesn't handle retries
+        // for transient issues internally before yielding the async generator, this retry will re-initiate
+        // the stream. For simple 429/500 errors on initial call, this is fine.
+        // If errors occur mid-stream, this setup won't resume the stream; it will restart it.
+        streamResponse = await retryWithBackoff(apiCall, {
+          shouldRetry: (error: Error) => {
+            // Check error messages for status codes, or specific error names if known
+            if (error && error.message) {
+              if (error.message.includes('429')) return true;
+              if (error.message.match(/5\d{2}/)) return true;
+            }
+            return false; // Don't retry other errors by default
+          },
+          onPersistent429: async (authType?: string, error?: unknown) =>
+            await this.handleFlashFallback(authType, error),
+          authType: this.config.getContentGeneratorConfig()?.authType,
+        });
+      }
 
       // Resolve the internal tracking of send completion promise - `sendPromise`
       // for both success and failure response. The actual failure is still
