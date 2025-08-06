@@ -75,7 +75,7 @@ export async function parseArguments(): Promise<CliArgs> {
     .scriptName('harald')
     .usage(
       '$0 [options]',
-      'Harald Code - Launch an interactive CLI, use -p/--prompt for non-interactive mode',
+      'Harald Code - Launch an interactive CLI, use -p/--prompt for non-interactive mode\nUsage: harald [options] or harald-code [options]',
     )
     .option('model', {
       alias: 'm',

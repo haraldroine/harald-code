@@ -10,7 +10,8 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "harald": "dist/index.js"
+    "harald": "dist/index.js",
+    "harald-code": "dist/index.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",

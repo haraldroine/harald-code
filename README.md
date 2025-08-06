@@ -46,8 +46,10 @@ npm install -g .
 ## Quick Start
 
 ```bash
-# Start Harald Code
+# Start Harald Code (use either command)
 harald
+# or
+harald-code
 
 # Example commands
 > Explain this codebase structure
@@ -125,7 +127,7 @@ Avoid rate limits by configuring multiple API keys for automatic rotation:
 
 ```bash
 # Add multiple API keys via CLI
-harald
+harald  # or harald-code
 > /api-keys add csk-your-first-key
 > /api-keys add csk-your-second-key  
 > /api-keys add csk-your-third-key
@@ -157,7 +159,7 @@ export OPENAI_MODEL="gpt-oss-120b"
 
 ```bash
 cd your-project/
-harald
+harald  # or harald-code
 
 # Architecture analysis
 > Describe the main pieces of this system's architecture
