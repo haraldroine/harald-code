@@ -243,8 +243,8 @@ describe('MCPOAuthProvider', () => {
       delete configWithoutClient.clientId;
 
       const mockRegistrationResponse: OAuthClientRegistrationResponse = {
-        client_id: 'dynamic_client_id',
-        client_secret: 'dynamic_client_secret',
+        client_id: 'test_client_id',
+        client_secret: 'test_client_secret',
         redirect_uris: ['http://localhost:7777/oauth/callback'],
         grant_types: ['authorization_code', 'refresh_token'],
         response_types: ['code'],
