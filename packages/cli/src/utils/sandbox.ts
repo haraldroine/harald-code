@@ -15,7 +15,7 @@ import {
   SETTINGS_DIRECTORY_NAME,
 } from '../config/settings.js';
 import { promisify } from 'util';
-import { Config, SandboxConfig } from '@cerebras-code/cerebras-code-core';
+import { Config, SandboxConfig } from '@harald-code/harald-code-core';
 
 const execAsync = promisify(exec);
 

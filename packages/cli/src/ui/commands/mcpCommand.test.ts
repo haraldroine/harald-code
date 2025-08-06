@@ -13,14 +13,14 @@ import {
   getMCPServerStatus,
   getMCPDiscoveryState,
   DiscoveredMCPTool,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 
 import { MessageActionReturn } from './types.js';
 import { Type, CallableTool } from '@google/genai';
 
-vi.mock('@cerebras-code/cerebras-code-core', async (importOriginal) => {
+vi.mock('@harald-code/harald-code-core', async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import('@cerebras-code/cerebras-code-core')>();
+    await importOriginal<typeof import('@harald-code/harald-code-core')>();
   return {
     ...actual,
     getMCPServerStatus: vi.fn(),
@@ -885,7 +885,7 @@ describe('mcpCommand', () => {
         },
       });
 
-      const { MCPOAuthProvider } = await import('@cerebras-code/cerebras-code-core');
+      const { MCPOAuthProvider } = await import('@harald-code/harald-code-core');
 
       const authCommand = mcpCommand.subCommands?.find(
         (cmd) => cmd.name === 'auth',
@@ -920,7 +920,7 @@ describe('mcpCommand', () => {
         },
       });
 
-      const { MCPOAuthProvider } = await import('@cerebras-code/cerebras-code-core');
+      const { MCPOAuthProvider } = await import('@harald-code/harald-code-core');
       (
         MCPOAuthProvider.authenticate as ReturnType<typeof vi.fn>
       ).mockRejectedValue(new Error('Auth failed'));

@@ -12,7 +12,7 @@ import {
   type SlashCommandActionReturn,
   CommandKind,
 } from './types.js';
-import { Config } from '@cerebras-code/cerebras-code-core';
+import { Config } from '@harald-code/harald-code-core';
 
 async function restoreAction(
   context: CommandContext,

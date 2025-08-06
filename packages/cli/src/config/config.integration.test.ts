@@ -12,7 +12,7 @@ import {
   Config,
   ConfigParameters,
   ContentGeneratorConfig,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 
 const TEST_CONTENT_GENERATOR_CONFIG: ContentGeneratorConfig = {
   apiKey: 'test-key',
@@ -21,8 +21,8 @@ const TEST_CONTENT_GENERATOR_CONFIG: ContentGeneratorConfig = {
 };
 
 // Mock file discovery service and tool registry
-vi.mock('@cerebras-code/cerebras-code-core', async () => {
-  const actual = await vi.importActual('@cerebras-code/cerebras-code-core');
+vi.mock('@harald-code/harald-code-core', async () => {
+  const actual = await vi.importActual('@harald-code/harald-code-core');
   return {
     ...actual,
     FileDiscoveryService: vi.fn().mockImplementation(() => ({

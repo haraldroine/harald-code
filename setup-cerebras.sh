@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "🚀 Cerebras Code Setup"
+echo "🚀 Harald Code Setup"
 echo "====================="
 echo ""
-echo "This script will help you configure Cerebras Code to use Cerebras Cloud by default."
+echo "This script will help you configure Harald Code to use Cerebras Cloud by default."
 echo ""
 
 # Check if CEREBRAS_API_KEY is already set

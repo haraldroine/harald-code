@@ -1,29 +1,29 @@
 #!/bin/bash
 
-# Quick context loading script for Cerebras Code
+# Quick context loading script for Harald Code
 
-echo "🧠 Cerebras Code Context Manager"
+echo "🧠 Harald Code Context Manager"
 echo "================================"
 echo ""
 
 case "$1" in
   "react")
     echo "Loading React development context..."
-    echo "You can run these commands in Cerebras Code:"
+    echo "You can run these commands in Harald Code:"
     echo ""
     echo "/memory add context/react-guidelines.md"
     echo "/memory add context/typescript-guidelines.md"
     ;;
   "testing")
     echo "Loading testing context..."
-    echo "You can run these commands in Cerebras Code:"
+    echo "You can run these commands in Harald Code:"
     echo ""
     echo "/memory add context/testing-guidelines.md" 
     echo "/memory add context/typescript-guidelines.md"
     ;;
   "full")
     echo "Loading all development context..."
-    echo "You can run these commands in Cerebras Code:"
+    echo "You can run these commands in Harald Code:"
     echo ""
     echo "/memory add context/react-guidelines.md"
     echo "/memory add context/typescript-guidelines.md"

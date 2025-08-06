@@ -11,7 +11,7 @@ import {
   shortenPath,
   tildeifyPath,
   tokenLimit,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import { ConsoleSummaryDisplay } from './ConsoleSummaryDisplay.js';
 import process from 'node:process';
 import Gradient from 'ink-gradient';

@@ -14,11 +14,11 @@ import {
   getErrorMessage,
   loadServerHierarchicalMemory,
   type FileDiscoveryService,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 
-vi.mock('@cerebras-code/cerebras-code-core', async (importOriginal) => {
+vi.mock('@harald-code/harald-code-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@cerebras-code/cerebras-code-core')>();
+    await importOriginal<typeof import('@harald-code/harald-code-core')>();
   return {
     ...original,
     getErrorMessage: vi.fn((error: unknown) => {

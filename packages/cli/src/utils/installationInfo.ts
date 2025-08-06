@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { isGitRepository } from '@cerebras-code/cerebras-code-core';
+import { isGitRepository } from '@harald-code/harald-code-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as childProcess from 'child_process';

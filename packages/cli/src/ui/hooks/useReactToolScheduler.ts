@@ -21,7 +21,7 @@ import {
   ToolCall,
   Status as CoreStatus,
   EditorType,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import { useCallback, useState, useMemo } from 'react';
 import {
   HistoryItemToolGroup,

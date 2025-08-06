@@ -16,7 +16,7 @@ import {
   logSlashCommand,
   SlashCommandEvent,
   ToolConfirmationOutcome,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import { useSessionStats } from '../contexts/SessionContext.js';
 import {
   Message,

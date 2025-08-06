@@ -1,6 +1,6 @@
 # API Key Rotation Guide
 
-Cerebras Code supports automatic API key rotation to help you avoid rate limits by switching between multiple Cerebras API keys. This is particularly useful since Cerebras offers 1 million tokens per day for free, and with multiple keys, you can effectively multiply your daily limit.
+Harald Code supports automatic API key rotation to help you avoid rate limits by switching between multiple Cerebras API keys. This is particularly useful since Cerebras offers 1 million tokens per day for free, and with multiple keys, you can effectively multiply your daily limit.
 
 ## Overview
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ToolConfirmationOutcome } from '@cerebras-code/cerebras-code-core';
+import { ToolConfirmationOutcome } from '@harald-code/harald-code-core';
 import { Box, Text, useInput } from 'ink';
 import React from 'react';
 import { Colors } from '../colors.js';

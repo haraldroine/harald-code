@@ -6,7 +6,7 @@
 
 /* ACP defines a schema for a simple (experimental) JSON-RPC protocol that allows GUI applications to interact with agents. */
 
-import { Icon } from '@cerebras-code/cerebras-code-core';
+import { Icon } from '@harald-code/harald-code-core';
 import { WritableStream, ReadableStream } from 'node:stream/web';
 
 export class ClientConnection implements Client {

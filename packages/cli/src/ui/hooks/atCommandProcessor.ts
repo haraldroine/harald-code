@@ -12,7 +12,7 @@ import {
   getErrorMessage,
   isNodeError,
   unescapePath,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import {
   HistoryItem,
   IndividualToolCallDisplay,

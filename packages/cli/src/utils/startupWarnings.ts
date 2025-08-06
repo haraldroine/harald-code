@@ -7,7 +7,7 @@
 import fs from 'fs/promises';
 import os from 'os';
 import { join as pathJoin } from 'node:path';
-import { getErrorMessage } from '@cerebras-code/cerebras-code-core';
+import { getErrorMessage } from '@harald-code/harald-code-core';
 
 const warningsFilePath = pathJoin(os.tmpdir(), 'qwen-code-warnings.txt');
 

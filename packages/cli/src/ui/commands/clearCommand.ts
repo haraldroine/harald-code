@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { uiTelemetryService } from '@cerebras-code/cerebras-code-core';
+import { uiTelemetryService } from '@harald-code/harald-code-core';
 import { CommandKind, SlashCommand } from './types.js';
 
 export const clearCommand: SlashCommand = {

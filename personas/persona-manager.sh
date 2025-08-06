@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Persona Management Script for Cerebras Code
+# Persona Management Script for Harald Code
 
 PERSONAS_DIR="$(dirname "$0")"
 
-echo "🎭 Cerebras Code Persona Manager"
+echo "🎭 Harald Code Persona Manager"
 echo "==============================="
 echo ""
 
@@ -39,7 +39,7 @@ list_personas() {
     echo "  • pair-programmer      - Collaborative partner for real-time development"
     echo ""
     
-    echo "To use a persona in Cerebras Code:"
+    echo "To use a persona in Harald Code:"
     echo "  > /memory clear"
     echo "  > /memory add personas/[persona-name].md"
     echo ""

@@ -9,7 +9,7 @@ import {
   Config,
   CodeAssistServer,
   UserTierId,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 
 export interface PrivacyState {
   isLoading: boolean;

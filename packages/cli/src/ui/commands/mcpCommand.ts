@@ -20,7 +20,7 @@ import {
   MCPServerStatus,
   mcpServerRequiresOAuth,
   getErrorMessage,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 
 const COLOR_GREEN = '\u001b[32m';
 const COLOR_YELLOW = '\u001b[33m';
@@ -139,7 +139,7 @@ const getMcpStatus = async (
       needsAuthHint = true;
       try {
         const { MCPOAuthTokenStorage } = await import(
-          '@cerebras-code/cerebras-code-core'
+          '@harald-code/harald-code-core'
         );
         const hasToken = await MCPOAuthTokenStorage.getToken(serverName);
         if (hasToken) {
@@ -376,7 +376,7 @@ const authCommand: SlashCommand = {
       );
 
       // Import dynamically to avoid circular dependencies
-      const { MCPOAuthProvider } = await import('@cerebras-code/cerebras-code-core');
+      const { MCPOAuthProvider } = await import('@harald-code/harald-code-core');
 
       let oauthConfig = server.oauth;
       if (!oauthConfig) {

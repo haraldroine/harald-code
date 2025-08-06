@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { sessionId, Logger } from '@cerebras-code/cerebras-code-core';
+import { sessionId, Logger } from '@harald-code/harald-code-core';
 
 /**
  * Hook to manage the logger instance.

@@ -14,7 +14,7 @@ import {
   ToolExecuteConfirmationDetails,
   ToolMcpConfirmationDetails,
   Config,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import {
   RadioButtonSelect,
   RadioSelectItem,

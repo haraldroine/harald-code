@@ -1,8 +1,8 @@
-# Cerebras Code
+# Harald Code
 
-![Cerebras Code Screenshot](https://via.placeholder.com/800x400/1e293b/ffffff?text=Cerebras+Code)
+![Harald Code Screenshot](https://via.placeholder.com/800x400/1e293b/ffffff?text=Harald+Code)
 
-[![GitHub Release](https://img.shields.io/github/v/release/haraldroine/cerebras-code)](https://github.com/haraldroine/cerebras-code/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/haraldroine/harald-code)](https://github.com/haraldroine/harald-code/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
 
@@ -10,7 +10,7 @@
 
 [Installation](#installation) • [Quick Start](#quick-start) • [Features](#features) • [Documentation](#documentation) • [Contributing](#contributing)
 
-Cerebras Code is a powerful command-line AI workflow tool adapted from **Qwen Code** and **Gemini CLI**, specifically optimized for Cerebras models. It enhances your development workflow with advanced code understanding, automated tasks, and intelligent assistance using Cerebras's lightning-fast inference.
+Harald Code is a powerful command-line AI workflow tool forked from **Qwen Code** and **Gemini CLI**, specifically optimized for Cerebras models. It enhances your development workflow with advanced code understanding, automated tasks, and intelligent assistance using Cerebras's lightning-fast inference.
 
 ⚡ **Lightning Fast**: Powered by Cerebras's ultra-fast inference, get responses in milliseconds
 🧠 **Smart Defaults**: Uses `gpt-oss-120b` model by default for optimal code generation
@@ -36,8 +36,8 @@ curl -qL https://www.npmjs.com/install.sh | sh
 ### Install from source
 
 ```bash
-git clone https://github.com/haraldroine/cerebras-code.git
-cd cerebras-code
+git clone https://github.com/haraldroine/harald-code.git
+cd harald-code
 npm install
 npm run build
 npm install -g .
@@ -46,8 +46,8 @@ npm install -g .
 ## Quick Start
 
 ```bash
-# Start Cerebras Code
-cerebras
+# Start Harald Code
+harald
 
 # Example commands
 > Explain this codebase structure
@@ -61,7 +61,7 @@ Control your token usage with configurable session limits to optimize costs and 
 
 #### Configure Session Token Limit
 
-Create or edit `.cerebras/settings.json` in your home directory:
+Create or edit `.harald/settings.json` in your home directory:
 
 ```json
 {
@@ -79,7 +79,7 @@ Create or edit `.cerebras/settings.json` in your home directory:
 
 ### API Configuration
 
-Cerebras Code supports multiple API providers. You can configure your API key through environment variables or a `.env` file in your project root.
+Harald Code supports multiple API providers. You can configure your API key through environment variables or a `.env` file in your project root.
 
 #### Configuration Methods
 
@@ -125,7 +125,7 @@ Avoid rate limits by configuring multiple API keys for automatic rotation:
 
 ```bash
 # Add multiple API keys via CLI
-cerebras
+harald
 > /api-keys add csk-your-first-key
 > /api-keys add csk-your-second-key  
 > /api-keys add csk-your-third-key
@@ -143,7 +143,7 @@ See the [API Key Rotation Guide](docs/api-key-rotation.md) for detailed setup in
 
 **🔄 Backwards Compatibility**
 
-Cerebras Code also supports OpenAI-compatible environment variables:
+Harald Code also supports OpenAI-compatible environment variables:
 
 ```bash
 export OPENAI_API_KEY="your_cerebras_api_key"
@@ -157,7 +157,7 @@ export OPENAI_MODEL="gpt-oss-120b"
 
 ```bash
 cd your-project/
-cerebras
+harald
 
 # Architecture analysis
 > Describe the main pieces of this system's architecture
@@ -255,7 +255,7 @@ cerebras
 * `/clear` - Clear conversation history
 * `/compress` - Compress history to save tokens
 * `/status` - Show current session information
-* `/exit` or `/quit` - Exit Cerebras Code
+* `/exit` or `/quit` - Exit Harald Code
 
 ### Keyboard Shortcuts
 
@@ -265,7 +265,7 @@ cerebras
 
 ## Performance Benchmarks
 
-Cerebras Code leverages Cerebras's industry-leading inference speed:
+Harald Code leverages Cerebras's industry-leading inference speed:
 
 | Model | Tokens/Second | Use Case |
 |-------|---------------|----------|
@@ -309,7 +309,7 @@ This project is based on [Qwen Code](https://github.com/QwenLM/qwen-code) and [G
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=haraldroine/cerebras-code&type=Date)](https://star-history.com/#haraldroine/cerebras-code&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=haraldroine/harald-code&type=Date)](https://star-history.com/#haraldroine/harald-code&Date)
 
 ---
 

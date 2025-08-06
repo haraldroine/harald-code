@@ -1,4 +1,4 @@
-# Cerebras Code
+# Harald Code
 
 AI-powered CLI tool optimized for Cerebras models.
 

@@ -1,5 +1,5 @@
 {
-  "name": "@cerebras-code/cerebras-code",
+  "name": "@harald-code/harald-code",
   "version": "0.0.4",
   "engines": {
     "node": ">=20.0.0"
@@ -14,7 +14,7 @@
   },
   "private": true,
   "config": {
-    "sandboxImageUri": "ghcr.io/haraldroine/cerebras-code:0.0.4"
+    "sandboxImageUri": "ghcr.io/haraldroine/harald-code:0.0.4"
   },
   "scripts": {
     "start": "node scripts/start.js",

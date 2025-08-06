@@ -25,7 +25,7 @@ import {
   Status as ToolCallStatusType,
   ApprovalMode,
   Icon,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import {
   HistoryItemWithoutId,
   ToolCallStatus,
@@ -33,8 +33,8 @@ import {
 } from '../types.js';
 
 // Mocks
-vi.mock('@cerebras-code/cerebras-code-core', async () => {
-  const actual = await vi.importActual('@cerebras-code/cerebras-code-core');
+vi.mock('@harald-code/harald-code-core', async () => {
+  const actual = await vi.importActual('@harald-code/harald-code-core');
   return {
     ...actual,
     ToolRegistry: vi.fn(),

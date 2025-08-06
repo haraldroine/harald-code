@@ -104,7 +104,7 @@ export async function persistCerebrasConfig(
   await persistEnvironmentVariable(
     'CEREBRAS_API_KEY',
     apiKey,
-    'Cerebras API Key for Cerebras Code CLI'
+    'Cerebras API Key for Harald Code CLI'
   );
   
   if (baseUrl) {

@@ -7,7 +7,7 @@
 import { vi } from 'vitest';
 import { CommandContext } from '../ui/commands/types.js';
 import { LoadedSettings } from '../config/settings.js';
-import { GitService } from '@cerebras-code/cerebras-code-core';
+import { GitService } from '@harald-code/harald-code-core';
 import { SessionStatsState } from '../ui/contexts/SessionContext.js';
 
 // A utility type to make all properties of an object, and its nested objects, partial.

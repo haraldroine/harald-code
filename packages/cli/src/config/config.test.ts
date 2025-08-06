@@ -9,7 +9,7 @@ import * as os from 'os';
 import { loadCliConfig, parseArguments, CliArgs } from './config.js';
 import { Settings } from './settings.js';
 import { Extension } from './extension.js';
-import * as ServerConfig from '@cerebras-code/cerebras-code-core';
+import * as ServerConfig from '@harald-code/harald-code-core';
 
 vi.mock('os', async (importOriginal) => {
   const actualOs = await importOriginal<typeof os>();
@@ -29,9 +29,9 @@ vi.mock('read-package-up', () => ({
   ),
 }));
 
-vi.mock('@cerebras-code/cerebras-code-core', async () => {
+vi.mock('@harald-code/harald-code-core', async () => {
   const actualServer = await vi.importActual<typeof ServerConfig>(
-    '@cerebras-code/cerebras-code-core',
+    '@harald-code/harald-code-core',
   );
   return {
     ...actualServer,

@@ -25,7 +25,7 @@ This directory contains different AI persona templates that change how the AI be
 
 ### Quick Persona Switch
 ```bash
-# In Cerebras Code:
+# In Harald Code:
 > /persona senior-developer
 > /persona react-specialist  
 > /persona debugging-expert

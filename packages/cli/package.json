@@ -1,7 +1,7 @@
 {
-  "name": "@cerebras-code/cerebras-code",
+  "name": "@harald-code/harald-code",
   "version": "0.0.4",
-  "description": "Cerebras Code",
+  "description": "Harald Code",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/haraldroine/cerebras-code.git"
@@ -10,7 +10,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "cerebras-code": "dist/index.js"
+    "harald": "dist/index.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",
@@ -26,10 +26,10 @@
     "dist"
   ],
   "config": {
-    "sandboxImageUri": "ghcr.io/haraldroine/cerebras-code:0.0.4"
+    "sandboxImageUri": "ghcr.io/haraldroine/harald-code:0.0.4"
   },
   "dependencies": {
-    "@cerebras-code/cerebras-code-core": "file:../core",
+    "@harald-code/harald-code-core": "file:../core",
     "@google/genai": "1.9.0",
     "@iarna/toml": "^2.2.5",
     "@types/update-notifier": "^6.0.8",

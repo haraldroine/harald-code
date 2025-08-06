@@ -10,7 +10,7 @@ import {
   IDEConnectionStatus,
   getIdeDisplayName,
   getIdeInstaller,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import {
   CommandContext,
   SlashCommand,

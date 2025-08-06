@@ -6,7 +6,7 @@
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import { getProjectTempDir } from '@cerebras-code/cerebras-code-core';
+import { getProjectTempDir } from '@harald-code/harald-code-core';
 
 const cleanupFunctions: Array<() => void> = [];
 

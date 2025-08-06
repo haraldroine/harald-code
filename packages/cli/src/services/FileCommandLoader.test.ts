@@ -9,7 +9,7 @@ import {
   Config,
   getProjectCommandsDir,
   getUserCommandsDir,
-} from '@cerebras-code/cerebras-code-core';
+} from '@harald-code/harald-code-core';
 import mock from 'mock-fs';
 import { FileCommandLoader } from './FileCommandLoader.js';
 import { assert, vi } from 'vitest';
@@ -54,9 +54,9 @@ vi.mock('./prompt-processors/argumentProcessor.js', async (importOriginal) => {
       .mockImplementation(() => new original.DefaultArgumentProcessor()),
   };
 });
-vi.mock('@cerebras-code/cerebras-code-core', async (importOriginal) => {
+vi.mock('@harald-code/harald-code-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@cerebras-code/cerebras-code-core')>();
+    await importOriginal<typeof import('@harald-code/harald-code-core')>();
   return {
     ...original,
     isCommandAllowed: vi.fn(),

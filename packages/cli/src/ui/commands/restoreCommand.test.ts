@@ -11,7 +11,7 @@ import * as path from 'path';
 import { restoreCommand } from './restoreCommand.js';
 import { type CommandContext } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
-import { Config, GitService } from '@cerebras-code/cerebras-code-core';
+import { Config, GitService } from '@harald-code/harald-code-core';
 
 describe('restoreCommand', () => {
   let mockContext: CommandContext;

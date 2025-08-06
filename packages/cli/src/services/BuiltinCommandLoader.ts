@@ -6,7 +6,7 @@
 
 import { ICommandLoader } from './types.js';
 import { SlashCommand } from '../ui/commands/types.js';
-import { Config } from '@cerebras-code/cerebras-code-core';
+import { Config } from '@harald-code/harald-code-core';
 import { aboutCommand } from '../ui/commands/aboutCommand.js';
 import { apiKeysCommand } from '../ui/commands/apiKeysCommand.js';
 import { authCommand } from '../ui/commands/authCommand.js';

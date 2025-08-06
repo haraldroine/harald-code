@@ -1,12 +1,12 @@
-# Qwen Code Companion
+# Harald Code Companion
 
-The Cerebras Code Companion extension seamlessly integrates [Cerebras Code](https://github.com/haraldroine/cerebras-code) into your VS Code environment. This integration enables Cerebras Code to access active information like your open files.
+The Harald Code Companion extension seamlessly integrates [Harald Code](https://github.com/haraldroine/cerebras-code) into your VS Code environment. This integration enables Harald Code to access active information like your open files.
 
 # Features
 
-- Open Editor File Context: Qwen Code gains awareness of the files you have open in your editor, providing it with a richer understanding of your project's structure and content.
+- Open Editor File Context: Harald Code gains awareness of the files you have open in your editor, providing it with a richer understanding of your project's structure and content.
 
-- Selection Context: Qwen Code can easily access your cursor's position and selected text within the editor, giving it valuable context directly from your current work.
+- Selection Context: Harald Code can easily access your cursor's position and selected text within the editor, giving it valuable context directly from your current work.
 
 # Requirements
 

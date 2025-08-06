@@ -1,7 +1,7 @@
 {
-  "name": "cerebras-code-vscode-ide-companion",
-  "displayName": "Cerebras Code Companion",
-  "description": "Enable Cerebras Code with direct access to your VS Code workspace.",
+  "name": "harald-code-vscode-ide-companion",
+  "displayName": "Harald Code Companion",
+  "description": "Enable Harald Code with direct access to your VS Code workspace.",
   "version": "0.0.4",
   "publisher": "cerebras",
   "icon": "assets/icon.png",
@@ -19,10 +19,10 @@
     "AI"
   ],
   "keywords": [
-    "cerebras-code",
-    "cerebras code",
+    "harald-code",
+    "harald code",
     "cerebras",
-    "cerebras code",
+    "harald code",
     "cli",
     "ide integration",
     "ide companion"
