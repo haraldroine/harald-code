@@ -1,6 +1,6 @@
 # Qwen Code Companion
 
-The Qwen Code Companion extension seamlessly integrates [Qwen Code](https://github.com/QwenLM/qwen-code) into your VS Code environment. This integration enables Qwen Code to access active information like your open files.
+The Cerebras Code Companion extension seamlessly integrates [Cerebras Code](https://github.com/haraldroine/cerebras-code) into your VS Code environment. This integration enables Cerebras Code to access active information like your open files.
 
 # Features
 
@@ -17,4 +17,4 @@ To use this extension, you'll need:
 
 # Terms of Service and Privacy Notice
 
-By installing this extension, you agree to the [Terms of Service](https://github.com/QwenLM/qwen-code/blob/main/docs/tos-privacy.md).
+By installing this extension, you agree to the [Terms of Service](https://github.com/haraldroine/cerebras-code/blob/main/docs/tos-privacy.md).
