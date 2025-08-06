@@ -121,7 +121,7 @@ export class TestRig {
     mkdirSync(this.testDir, { recursive: true });
 
     // Create a settings file to point the CLI to the local collector
-    const geminiDir = join(this.testDir, '.gemini');
+    const geminiDir = join(this.testDir, '.qwen');
     mkdirSync(geminiDir, { recursive: true });
     // In sandbox mode, use an absolute path for telemetry inside the container
     // The container mounts the test directory at the same path as the host
@@ -567,7 +567,7 @@ export class TestRig {
         // Look for tool call logs
         if (
           logData.attributes &&
-          logData.attributes['event.name'] === 'gemini_cli.tool_call'
+          logData.attributes['event.name'] === 'qwen-code.tool_call'
         ) {
           const toolName = logData.attributes.function_name;
           logs.push({

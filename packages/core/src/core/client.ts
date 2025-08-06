@@ -13,6 +13,8 @@ import {
   Content,
   Tool,
   GenerateContentResponse,
+  FunctionDeclaration,
+  Schema,
 } from '@google/genai';
 import { getFolderStructure } from '../utils/getFolderStructure.js';
 import {
@@ -25,7 +27,7 @@ import { Config } from '../config/config.js';
 import { UserTierId } from '../code_assist/types.js';
 import { getCoreSystemPrompt, getCompressionPrompt } from './prompts.js';
 import { ReadManyFilesTool } from '../tools/read-many-files.js';
-import { getResponseText } from '../utils/generateContentResponseUtilities.js';
+import { getFunctionCalls } from '../utils/generateContentResponseUtilities.js';
 import { checkNextSpeaker } from '../utils/nextSpeakerChecker.js';
 import { reportError } from '../utils/errorReporting.js';
 import { GeminiChat } from './geminiChat.js';
@@ -44,11 +46,7 @@ import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
 import { LoopDetectionService } from '../services/loopDetectionService.js';
 import { ideContext } from '../ide/ideContext.js';
 import { logNextSpeakerCheck } from '../telemetry/loggers.js';
-import {
-  MalformedJsonResponseEvent,
-  NextSpeakerCheckEvent,
-} from '../telemetry/types.js';
-import { ClearcutLogger } from '../telemetry/clearcut-logger/clearcut-logger.js';
+import { NextSpeakerCheckEvent } from '../telemetry/types.js';
 
 function isThinkingSupported(model: string) {
   if (model.startsWith('gemini-2.5')) return true;
@@ -539,6 +537,19 @@ export class GeminiClient {
         ...config,
       };
 
+      // Convert schema to function declaration
+      const functionDeclaration: FunctionDeclaration = {
+        name: 'respond_in_schema',
+        description: 'Provide the response in provided schema',
+        parameters: schema as Schema,
+      };
+
+      const tools: Tool[] = [
+        {
+          functionDeclarations: [functionDeclaration],
+        },
+      ];
+
       const apiCall = () =>
         this.getContentGenerator().generateContent(
           {
@@ -546,8 +557,7 @@ export class GeminiClient {
             config: {
               ...requestConfig,
               systemInstruction,
-              responseSchema: schema,
-              responseMimeType: 'application/json',
+              tools,
             },
             contents,
           },
@@ -559,73 +569,16 @@ export class GeminiClient {
           await this.handleFlashFallback(authType, error),
         authType: this.config.getContentGeneratorConfig()?.authType,
       });
-
-      let text = getResponseText(result);
-      if (!text) {
-        const error = new Error(
-          'API returned an empty response for generateJson.',
+      const functionCalls = getFunctionCalls(result);
+      if (functionCalls && functionCalls.length > 0) {
+        const functionCall = functionCalls.find(
+          (call) => call.name === 'respond_in_schema',
         );
-        await reportError(
-          error,
-          'Error in generateJson: API returned an empty response.',
-          contents,
-          'generateJson-empty-response',
-        );
-        throw error;
-      }
-
-      const prefix = '```json';
-      const suffix = '```';
-      if (text.startsWith(prefix) && text.endsWith(suffix)) {
-        ClearcutLogger.getInstance(this.config)?.logMalformedJsonResponseEvent(
-          new MalformedJsonResponseEvent(modelToUse),
-        );
-        text = text
-          .substring(prefix.length, text.length - suffix.length)
-          .trim();
-      }
-
-      try {
-        // Try to extract JSON from various formats
-        const extractors = [
-          // Match ```json ... ``` or ``` ... ``` blocks
-          /```(?:json)?\s*\n?([\s\S]*?)\n?```/,
-          // Match inline code blocks `{...}`
-          /`(\{[\s\S]*?\})`/,
-          // Match raw JSON objects or arrays
-          /(\{[\s\S]*\}|\[[\s\S]*\])/,
-        ];
-
-        for (const regex of extractors) {
-          const match = text.match(regex);
-          if (match && match[1]) {
-            try {
-              return JSON.parse(match[1].trim());
-            } catch {
-              // Continue to next pattern if parsing fails
-              continue;
-            }
-          }
+        if (functionCall && functionCall.args) {
+          return functionCall.args as Record<string, unknown>;
         }
-
-        // If no patterns matched, try parsing the entire text
-        return JSON.parse(text.trim());
-      } catch (parseError) {
-        await reportError(
-          parseError,
-          'Failed to parse JSON response from generateJson.',
-          {
-            responseTextFailedToParse: text,
-            originalRequestContents: contents,
-          },
-          'generateJson-parse',
-        );
-        throw new Error(
-          `Failed to parse API response as JSON: ${getErrorMessage(
-            parseError,
-          )}`,
-        );
       }
+      return {};
     } catch (error) {
       if (abortSignal.aborted) {
         throw error;

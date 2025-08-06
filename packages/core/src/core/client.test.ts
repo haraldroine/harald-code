@@ -66,6 +66,17 @@ vi.mock('../utils/generateContentResponseUtilities', () => ({
   getResponseText: (result: GenerateContentResponse) =>
     result.candidates?.[0]?.content?.parts?.map((part) => part.text).join('') ||
     undefined,
+  getFunctionCalls: (result: GenerateContentResponse) => {
+    // Extract function calls from the response
+    const parts = result.candidates?.[0]?.content?.parts;
+    if (!parts) {
+      return undefined;
+    }
+    const functionCallParts = parts
+      .filter((part) => !!part.functionCall)
+      .map((part) => part.functionCall);
+    return functionCallParts.length > 0 ? functionCallParts : undefined;
+  },
 }));
 vi.mock('../telemetry/index.js', () => ({
   logApiRequest: vi.fn(),
@@ -158,7 +169,14 @@ describe('Gemini Client (client.ts)', () => {
       candidates: [
         {
           content: {
-            parts: [{ text: '{"key": "value"}' }],
+            parts: [
+              {
+                functionCall: {
+                  name: 'respond_in_schema',
+                  args: { key: 'value' },
+                },
+              },
+            ],
           },
         },
       ],
@@ -209,6 +227,7 @@ describe('Gemini Client (client.ts)', () => {
       }),
       getGeminiClient: vi.fn(),
       setFallbackMode: vi.fn(),
+      getDebugMode: vi.fn().mockReturnValue(false),
     };
     const MockedConfig = vi.mocked(Config, true);
     MockedConfig.mockImplementation(
@@ -387,7 +406,8 @@ describe('Gemini Client (client.ts)', () => {
       };
       client['contentGenerator'] = mockGenerator as ContentGenerator;
 
-      await client.generateJson(contents, schema, abortSignal);
+      const result = await client.generateJson(contents, schema, abortSignal);
+      expect(result).toEqual({ key: 'value' });
 
       expect(mockGenerateContentFn).toHaveBeenCalledWith(
         {
@@ -397,8 +417,17 @@ describe('Gemini Client (client.ts)', () => {
             systemInstruction: getCoreSystemPrompt(''),
             temperature: 0,
             topP: 1,
-            responseSchema: schema,
-            responseMimeType: 'application/json',
+            tools: [
+              {
+                functionDeclarations: [
+                  {
+                    name: 'respond_in_schema',
+                    description: 'Provide the response in provided schema',
+                    parameters: schema,
+                  },
+                ],
+              },
+            ],
           },
           contents,
         },
@@ -419,13 +448,14 @@ describe('Gemini Client (client.ts)', () => {
       };
       client['contentGenerator'] = mockGenerator as ContentGenerator;
 
-      await client.generateJson(
+      const result = await client.generateJson(
         contents,
         schema,
         abortSignal,
         customModel,
         customConfig,
       );
+      expect(result).toEqual({ key: 'value' });
 
       expect(mockGenerateContentFn).toHaveBeenCalledWith(
         {
@@ -436,8 +466,17 @@ describe('Gemini Client (client.ts)', () => {
             temperature: 0.9,
             topP: 1, // from default
             topK: 20,
-            responseSchema: schema,
-            responseMimeType: 'application/json',
+            tools: [
+              {
+                functionDeclarations: [
+                  {
+                    name: 'respond_in_schema',
+                    description: 'Provide the response in provided schema',
+                    parameters: schema,
+                  },
+                ],
+              },
+            ],
           },
           contents,
         },
