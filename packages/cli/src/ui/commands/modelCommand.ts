@@ -11,6 +11,7 @@ import {
   CommandKind,
 } from './types.js';
 import { SettingScope } from '../../config/settings.js';
+import OpenAI from 'openai';
 
 const COLOR_GREEN = '\u001b[32m';
 const COLOR_YELLOW = '\u001b[33m';
@@ -19,8 +20,8 @@ const COLOR_CYAN = '\u001b[36m';
 const COLOR_GREY = '\u001b[90m';
 const RESET_COLOR = '\u001b[0m';
 
-// Available Cerebras models
-const AVAILABLE_MODELS = [
+// Fallback models if API call fails
+const FALLBACK_MODELS = [
   'gpt-oss-120b',
   'llama3.1-8b',
   'llama-3.3-70b',
@@ -31,6 +32,68 @@ const AVAILABLE_MODELS = [
 ];
 
 const DEFAULT_MODEL = 'gpt-oss-120b';
+
+interface CerebrasModel {
+  id: string;
+  object: string;
+  created: number;
+  owned_by: string;
+}
+
+/**
+ * Fetch available models from Cerebras API
+ */
+async function fetchAvailableModels(): Promise<string[]> {
+  try {
+    const apiKey = process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return FALLBACK_MODELS;
+    }
+
+    const baseURL = process.env.CEREBRAS_BASE_URL || process.env.OPENAI_BASE_URL || 'https://api.cerebras.ai/v1';
+    
+    const client = new OpenAI({
+      apiKey,
+      baseURL,
+      timeout: 5000, // 5 second timeout for model listing
+    });
+
+    const response = await client.models.list();
+    const models = response.data
+      .map((model: CerebrasModel) => model.id)
+      .sort();
+
+    return models.length > 0 ? models : FALLBACK_MODELS;
+  } catch (error) {
+    console.warn('Failed to fetch models from Cerebras API, using fallback list:', error);
+    return FALLBACK_MODELS;
+  }
+}
+
+/**
+ * Get model details from Cerebras API
+ */
+async function getModelDetails(modelId: string): Promise<CerebrasModel | null> {
+  try {
+    const apiKey = process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return null;
+    }
+
+    const baseURL = process.env.CEREBRAS_BASE_URL || process.env.OPENAI_BASE_URL || 'https://api.cerebras.ai/v1';
+    
+    const client = new OpenAI({
+      apiKey,
+      baseURL,
+      timeout: 5000,
+    });
+
+    const model = await client.models.retrieve(modelId);
+    return model as CerebrasModel;
+  } catch (error) {
+    return null;
+  }
+}
 
 /**
  * Show current model configuration
@@ -66,10 +129,35 @@ const showCurrentModel = async (context: CommandContext): Promise<SlashCommandAc
   message += `• Environment: ${envModel || 'not set'}\n`;
   message += `• Default: ${DEFAULT_MODEL}\n\n`;
   
-  if (AVAILABLE_MODELS.includes(currentModel)) {
-    message += `${COLOR_GREEN}✓ Model is valid${RESET_COLOR}\n`;
+  // Check if we have API access and validate model
+  const apiKey = process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY;
+  if (apiKey) {
+    message += `${COLOR_GREY}API Status:${RESET_COLOR} ${COLOR_GREEN}Connected${RESET_COLOR}\n`;
+    
+    // Show loading indicator for API call
+    context.ui.addItem(
+      {
+        type: 'info',
+        text: `${COLOR_CYAN}Verifying model with Cerebras API...${RESET_COLOR}`,
+      },
+      Date.now(),
+    );
+    
+    // Try to get model details from API
+    const modelDetails = await getModelDetails(currentModel);
+    if (modelDetails) {
+      message += `${COLOR_GREEN}✓ Model verified via Cerebras API${RESET_COLOR}\n`;
+      message += `${COLOR_GREY}Owner: ${modelDetails.owned_by}${RESET_COLOR}\n`;
+    } else {
+      message += `${COLOR_YELLOW}⚠ Model not found in Cerebras API (may still work)${RESET_COLOR}\n`;
+    }
   } else {
-    message += `${COLOR_YELLOW}⚠ Warning: '${currentModel}' is not in the list of known Cerebras models${RESET_COLOR}\n`;
+    message += `${COLOR_GREY}API Status:${RESET_COLOR} ${COLOR_YELLOW}No API key configured${RESET_COLOR}\n`;
+    if (FALLBACK_MODELS.includes(currentModel)) {
+      message += `${COLOR_GREEN}✓ Model is in fallback list${RESET_COLOR}\n`;
+    } else {
+      message += `${COLOR_YELLOW}⚠ Warning: '${currentModel}' is not in the fallback list${RESET_COLOR}\n`;
+    }
   }
 
   message += `\n${COLOR_CYAN}Use '/model list' to see available models or '/model set <model>' to change.${RESET_COLOR}`;
@@ -101,29 +189,68 @@ const listModels = async (context: CommandContext): Promise<SlashCommandActionRe
     process.env.OPENAI_MODEL || 
     DEFAULT_MODEL;
 
-  let message = `${COLOR_GREEN}Available Cerebras Models${RESET_COLOR}\n\n`;
+  // Show loading indicator
+  const apiKey = process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY;
+  if (apiKey) {
+    context.ui.addItem(
+      {
+        type: 'info',
+        text: `${COLOR_CYAN}Loading models from Cerebras API...${RESET_COLOR}`,
+      },
+      Date.now(),
+    );
+  }
+
+  // Fetch available models from API
+  const availableModels = await fetchAvailableModels();
   
-  AVAILABLE_MODELS.forEach((model, index) => {
+  let message = `${COLOR_GREEN}Available Cerebras Models${RESET_COLOR}`;
+  
+  if (apiKey) {
+    message += ` ${COLOR_GREY}(via API)${RESET_COLOR}`;
+  } else {
+    message += ` ${COLOR_GREY}(fallback list)${RESET_COLOR}`;
+  }
+  
+  message += `\n\n`;
+  
+  for (let i = 0; i < availableModels.length; i++) {
+    const model = availableModels[i];
     const isCurrent = model === currentModel;
     const marker = isCurrent ? `${COLOR_GREEN}● ` : `${COLOR_GREY}○ `;
     const modelColor = isCurrent ? COLOR_GREEN : COLOR_CYAN;
-    const description = getModelDescription(model);
     
     message += `${marker}${modelColor}${model}${RESET_COLOR}`;
     if (isCurrent) {
       message += ` ${COLOR_YELLOW}(current)${RESET_COLOR}`;
     }
-    if (description) {
-      message += `\n    ${COLOR_GREY}${description}${RESET_COLOR}`;
+    
+    // Try to get description from API if available
+    if (apiKey) {
+      const modelDetails = await getModelDetails(model);
+      if (modelDetails) {
+        message += `\n    ${COLOR_GREY}Owner: ${modelDetails.owned_by}${RESET_COLOR}`;
+      }
+    } else {
+      // Use hardcoded description for fallback models
+      const description = getModelDescription(model);
+      if (description) {
+        message += `\n    ${COLOR_GREY}${description}${RESET_COLOR}`;
+      }
     }
+    
     message += '\n';
     
-    if (index < AVAILABLE_MODELS.length - 1) {
+    if (i < availableModels.length - 1) {
       message += '\n';
     }
-  });
+  }
 
   message += `\n\n${COLOR_CYAN}Use '/model set <model>' to change the active model.${RESET_COLOR}`;
+  
+  if (!apiKey) {
+    message += `\n${COLOR_YELLOW}💡 Tip: Set CEREBRAS_API_KEY to see the latest available models.${RESET_COLOR}`;
+  }
 
   return {
     type: 'message',
@@ -157,13 +284,26 @@ const setModel = async (context: CommandContext, args: string): Promise<SlashCom
     };
   }
 
-  // Validate model name
-  if (!AVAILABLE_MODELS.includes(modelName)) {
+  // Show loading indicator for model validation
+  const apiKey = process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY;
+  if (apiKey) {
+    context.ui.addItem(
+      {
+        type: 'info',
+        text: `${COLOR_CYAN}Validating model with Cerebras API...${RESET_COLOR}`,
+      },
+      Date.now(),
+    );
+  }
+
+  // Validate model name against available models
+  const availableModels = await fetchAvailableModels();
+  if (!availableModels.includes(modelName)) {
     return {
       type: 'message',
       messageType: 'error',
       content: `${COLOR_RED}Unknown model: '${modelName}'${RESET_COLOR}\n\n` +
-        `Available models:\n${AVAILABLE_MODELS.map(m => `• ${m}`).join('\n')}\n\n` +
+        `Available models:\n${availableModels.map(m => `• ${m}`).join('\n')}\n\n` +
         `Use '/model list' to see detailed information.`,
     };
   }
@@ -184,12 +324,32 @@ const setModel = async (context: CommandContext, args: string): Promise<SlashCom
     // Also update the config for the current session
     config.setModel(modelName);
 
-    const description = getModelDescription(modelName);
     let message = `${COLOR_GREEN}✓ Model changed successfully!${RESET_COLOR}\n\n`;
     message += `${COLOR_CYAN}New model:${RESET_COLOR} ${modelName}\n`;
-    if (description) {
-      message += `${COLOR_GREY}${description}${RESET_COLOR}\n`;
+    
+    // Try to get model details from API
+    const apiKeyForDetails = process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY;
+    if (apiKeyForDetails) {
+      context.ui.addItem(
+        {
+          type: 'info',
+          text: `${COLOR_CYAN}Getting model details...${RESET_COLOR}`,
+        },
+        Date.now(),
+      );
+      
+      const modelDetails = await getModelDetails(modelName);
+      if (modelDetails) {
+        message += `${COLOR_GREY}Owner: ${modelDetails.owned_by}${RESET_COLOR}\n`;
+      }
+    } else {
+      // Use hardcoded description for fallback
+      const description = getModelDescription(modelName);
+      if (description) {
+        message += `${COLOR_GREY}${description}${RESET_COLOR}\n`;
+      }
     }
+    
     message += `\n${COLOR_YELLOW}Note: The model change is now active for new conversations.${RESET_COLOR}`;
 
     return {

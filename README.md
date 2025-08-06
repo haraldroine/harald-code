@@ -1,6 +1,6 @@
 # Harald Code
 
-![Harald Code Screenshot](https://via.placeholder.com/800x400/1e293b/ffffff?text=Harald+Code)
+![Harald Code Screenshot](assets/harald-code-screenshot.png)
 
 [![GitHub Release](https://img.shields.io/github/v/release/haraldroine/harald-code)](https://github.com/haraldroine/harald-code/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)

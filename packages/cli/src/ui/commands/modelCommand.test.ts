@@ -9,10 +9,39 @@ import { modelCommand } from './modelCommand.js';
 import { CommandContext, CommandKind } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 
+// Mock OpenAI client
+vi.mock('openai', () => {
+  return {
+    default: vi.fn().mockImplementation(() => ({
+      models: {
+        list: vi.fn().mockResolvedValue({
+          data: [
+            { id: 'llama3.1-8b', object: 'model', created: 1721692800, owned_by: 'Meta' },
+            { id: 'gpt-oss-120b', object: 'model', created: 1721692800, owned_by: 'Cerebras' },
+            { id: 'qwen-3-32b', object: 'model', created: 1721692800, owned_by: 'Qwen' },
+          ],
+        }),
+        retrieve: vi.fn().mockImplementation((modelId: string) => 
+          Promise.resolve({
+            id: modelId,
+            object: 'model',
+            created: 1721692800,
+            owned_by: modelId.includes('llama') ? 'Meta' : modelId.includes('qwen') ? 'Qwen' : 'Cerebras',
+          })
+        ),
+      },
+    })),
+  };
+});
+
 describe('modelCommand', () => {
   let context: CommandContext;
 
   beforeEach(() => {
+    // Mock environment variables
+    process.env.CEREBRAS_API_KEY = 'test-api-key';
+    process.env.CEREBRAS_BASE_URL = 'https://api.cerebras.ai/v1';
+    
     context = createMockCommandContext({
       services: {
         config: {
