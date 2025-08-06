@@ -10,7 +10,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "cerebras": "dist/index.js"
+    "cerebras-code": "dist/index.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",
