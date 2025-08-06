@@ -1,33 +1,11 @@
-# Cerebras Code Project Context
+# Cerebras Code
 
-This project is **Cerebras Code** - an AI-powered command-line workflow tool for developers, optimized for Cerebras's lightning-fast inference.
+AI-powered CLI tool optimized for Cerebras models.
 
-## Available Context Modules
+## Context Management
 
-You can selectively load specific development guidelines using the `/memory` command:
+Load specific contexts as needed:
+- `/memory add context/react-guidelines.md` - React best practices
+- `/memory add personas/senior-developer.md` - Senior dev persona
 
-- **React Development**: `/memory add context/react-guidelines.md`
-- **TypeScript Best Practices**: `/memory add context/typescript-guidelines.md`  
-- **Testing Strategies**: `/memory add context/testing-guidelines.md`
-- **Build Process**: `/memory add context/build-guidelines.md`
-
-## Quick Context Loading
-
-For React development:
-```
-/memory add context/react-guidelines.md
-/memory add context/typescript-guidelines.md
-```
-
-For testing work:
-```
-/memory add context/testing-guidelines.md
-/memory add context/typescript-guidelines.md
-```
-
-## Project-Specific Notes
-
-- This is a fork of Qwen Code, optimized for Cerebras models
-- Default model: `gpt-oss-120b`
-- Repository: https://github.com/haraldroine/cerebras-code
-- Uses Vitest for testing, React with Ink for CLI UI
+Repository: https://github.com/haraldroine/cerebras-code
