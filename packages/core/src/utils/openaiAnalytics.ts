@@ -339,7 +339,8 @@ function getErrorTypeFromLog(logData: unknown): string {
 }
 
 // CLI interface when script is run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Only run CLI if this module is the main entry point and not being imported
+if (false) { // Disabled - this should not run during normal imports
   async function main() {
     const args = process.argv.slice(2);
     const days = args[0] ? parseInt(args[0], 10) : 7;

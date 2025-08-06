@@ -6,6 +6,7 @@
 
 import { AuthType } from '@cerebras-code/cerebras-code-core';
 import { loadEnvironment } from './settings.js';
+import { persistCerebrasConfig } from '../utils/envPersistence.js';
 
 export const validateAuthMethod = (authMethod: string): string | null => {
   loadEnvironment();
@@ -39,8 +40,8 @@ export const validateAuthMethod = (authMethod: string): string | null => {
   }
 
   if (authMethod === AuthType.USE_OPENAI) {
-    if (!process.env.OPENAI_API_KEY) {
-      return 'OPENAI_API_KEY environment variable not found. You can enter it interactively or add it to your .env file.';
+    if (!process.env.CEREBRAS_API_KEY && !process.env.OPENAI_API_KEY) {
+      return 'CEREBRAS_API_KEY or OPENAI_API_KEY environment variable not found. You can enter it interactively or add it to your .env file.';
     }
     return null;
   }
@@ -58,4 +59,28 @@ export const setOpenAIBaseUrl = (baseUrl: string): void => {
 
 export const setOpenAIModel = (model: string): void => {
   process.env.OPENAI_MODEL = model;
+};
+
+/**
+ * Sets and persists Cerebras/OpenAI configuration for future CLI sessions
+ */
+export const setAndPersistCerebrasConfig = async (
+  apiKey: string,
+  baseUrl: string,
+  model: string
+): Promise<void> => {
+  // Set for current session
+  if (apiKey.startsWith('csk-') || baseUrl.includes('cerebras')) {
+    // This is a Cerebras key, use CEREBRAS_API_KEY
+    process.env.CEREBRAS_API_KEY = apiKey;
+  } else {
+    // This might be an OpenAI key, use OPENAI_API_KEY
+    process.env.OPENAI_API_KEY = apiKey;
+  }
+  
+  process.env.OPENAI_BASE_URL = baseUrl;
+  process.env.OPENAI_MODEL = model;
+  
+  // Persist to shell profile for future sessions
+  await persistCerebrasConfig(apiKey, baseUrl, model);
 };

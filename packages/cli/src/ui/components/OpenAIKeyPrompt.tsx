@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import { Colors } from '../colors.js';
+import { getShellProfilePathForDisplay } from '../../utils/envPersistence.js';
 
 interface OpenAIKeyPromptProps {
   onSubmit: (apiKey: string, baseUrl: string, model: string) => void;
@@ -18,8 +19,8 @@ export function OpenAIKeyPrompt({
   onCancel,
 }: OpenAIKeyPromptProps): React.JSX.Element {
   const [apiKey, setApiKey] = useState('');
-  const [baseUrl, setBaseUrl] = useState('');
-  const [model, setModel] = useState('');
+  const [baseUrl, setBaseUrl] = useState('https://api.cerebras.ai/v1');
+  const [model, setModel] = useState('gpt-oss-120b');
   const [currentField, setCurrentField] = useState<
     'apiKey' | 'baseUrl' | 'model'
   >('apiKey');
@@ -132,14 +133,19 @@ export function OpenAIKeyPrompt({
       width="100%"
     >
       <Text bold color={Colors.AccentBlue}>
-        OpenAI Configuration Required
+        🚀 Cerebras API Configuration
       </Text>
       <Box marginTop={1}>
         <Text>
-          Please enter your OpenAI configuration. You can get an API key from{' '}
+          Get your API key from{' '}
           <Text color={Colors.AccentBlue}>
-            https://platform.openai.com/api-keys
+            https://cloud.cerebras.ai/
           </Text>
+        </Text>
+      </Box>
+      <Box marginTop={1}>
+        <Text color={Colors.Gray}>
+          ✅ Your credentials will be saved to {getShellProfilePathForDisplay()}
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="row">
@@ -190,6 +196,11 @@ export function OpenAIKeyPrompt({
       <Box marginTop={1}>
         <Text color={Colors.Gray}>
           Press Enter to continue, Tab/↑↓ to navigate, Esc to cancel
+        </Text>
+      </Box>
+      <Box marginTop={1}>
+        <Text color={Colors.AccentGreen}>
+          💡 After setup, run 'source ~/.zshrc' or restart your terminal
         </Text>
       </Box>
     </Box>

@@ -15,6 +15,7 @@ import {
   setOpenAIApiKey,
   setOpenAIBaseUrl,
   setOpenAIModel,
+  setAndPersistCerebrasConfig,
 } from '../../config/auth.js';
 import { OpenAIKeyPrompt } from './OpenAIKeyPrompt.js';
 
@@ -84,16 +85,25 @@ export function AuthDialog({
     }
   };
 
-  const handleOpenAIKeySubmit = (
+  const handleOpenAIKeySubmit = async (
     apiKey: string,
     baseUrl: string,
     model: string,
   ) => {
-    setOpenAIApiKey(apiKey);
-    setOpenAIBaseUrl(baseUrl);
-    setOpenAIModel(model);
-    setShowOpenAIKeyPrompt(false);
-    onSelect(AuthType.USE_OPENAI, SettingScope.User);
+    try {
+      // Use the persistent configuration function
+      await setAndPersistCerebrasConfig(apiKey, baseUrl, model);
+      setShowOpenAIKeyPrompt(false);
+      onSelect(AuthType.USE_OPENAI, SettingScope.User);
+    } catch (error) {
+      console.error('Failed to save configuration:', error);
+      // Fall back to session-only configuration
+      setOpenAIApiKey(apiKey);
+      setOpenAIBaseUrl(baseUrl);
+      setOpenAIModel(model);
+      setShowOpenAIKeyPrompt(false);
+      onSelect(AuthType.USE_OPENAI, SettingScope.User);
+    }
   };
 
   const handleOpenAIKeyCancel = () => {
