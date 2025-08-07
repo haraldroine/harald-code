@@ -286,6 +286,32 @@ Harald Code leverages Cerebras's industry-leading inference speed:
 | llama3.1-8b | 2000+ | Quick queries, simple tasks |
 | qwen-3-32b | 1500+ | Code analysis, documentation |
 
+## Sponsorship
+
+Harald Code features a built-in sponsor system that helps support the development of this open-source tool while providing visibility for sponsors.
+
+### 💎 Current Sponsor Program
+
+- **Sponsor Display**: Your company name and website appear in the CLI footer for all users
+- **Developer Reach**: Connect with developers actively using AI-powered development tools
+
+### How to Apply
+
+Interested in sponsoring Harald Code? Contact us:
+
+- **Email**: harald@buroventures.com
+- **Subject**: Harald Code Sponsor Application
+- **CLI Command**: Type `/sponsor apply` within the CLI for details
+
+Please include your company name, website, and sponsorship goals in your application.
+
+### In-CLI Experience
+
+Users can see sponsor information directly in the CLI:
+```bash
+💎 Sponsored by: [Your Company] (yourwebsite.com)
+```
+
 ## Development & Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to learn how to contribute to the project.
