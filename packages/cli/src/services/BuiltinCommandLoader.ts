@@ -36,6 +36,7 @@ import { vimCommand } from '../ui/commands/vimCommand.js';
 import { setupGithubCommand } from '../ui/commands/setupGithubCommand.js';
 import { settingsCommand } from '../ui/commands/settingsCommand.js';
 import { sponsorCommand } from '../ui/commands/sponsorCommand.js';
+import { updateCommand } from '../ui/commands/updateCommand.js';
 import { isGitHubRepository } from '../utils/gitUtils.js';
 
 /**
@@ -81,6 +82,7 @@ export class BuiltinCommandLoader implements ICommandLoader {
       statsCommand,
       themeCommand,
       toolsCommand,
+      updateCommand,
       vimCommand,
       ...(isGitHubRepository() ? [setupGithubCommand] : []),
     ];
