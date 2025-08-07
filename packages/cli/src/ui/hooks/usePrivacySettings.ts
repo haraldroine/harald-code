@@ -9,7 +9,7 @@ import {
   Config,
   CodeAssistServer,
   UserTierId,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 export interface PrivacyState {
   isLoading: boolean;

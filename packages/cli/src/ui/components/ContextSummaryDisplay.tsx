@@ -10,7 +10,7 @@ import { Colors } from '../colors.js';
 import {
   type IdeContext,
   type MCPServerConfig,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 interface ContextSummaryDisplayProps {
   geminiMdFileCount: number;

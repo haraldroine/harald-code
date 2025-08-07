@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AuthType } from '@harald-code/harald-code-core';
+import { AuthType } from 'buroventures-harald-code-core';
 import { vi } from 'vitest';
 import { validateAuthMethod } from './auth.js';
 

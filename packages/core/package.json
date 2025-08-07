@@ -1,5 +1,5 @@
 {
-  "name": "@harald-code/harald-code-core",
+  "name": "buroventures-harald-code-core",
   "version": "0.0.4",
   "description": "Harald Code Core - Core functionality for AI-powered coding assistant",
   "keywords": ["ai", "coding", "assistant", "core", "development", "gemini", "cerebras"],

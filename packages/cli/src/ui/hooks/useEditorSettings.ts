@@ -11,7 +11,7 @@ import {
   allowEditorTypeInSandbox,
   checkHasEditorType,
   EditorType,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 interface UseEditorSettingsReturn {
   isEditorDialogOpen: boolean;

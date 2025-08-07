@@ -10,7 +10,7 @@ import {
   IDEConnectionStatus,
   getIdeDisplayName,
   getIdeInstaller,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import {
   CommandContext,
   SlashCommand,

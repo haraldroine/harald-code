@@ -16,7 +16,7 @@ import {
   SandboxConfig,
   GeminiClient,
   ideContext,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import { LoadedSettings, SettingsFile, Settings } from '../config/settings.js';
 import process from 'node:process';
 import { useGeminiStream } from './hooks/useGeminiStream.js';
@@ -86,10 +86,10 @@ interface MockServerConfig {
   getUserTier: Mock<() => Promise<string | undefined>>;
 }
 
-// Mock @harald-code/harald-code-core and its Config class
-vi.mock('@harald-code/harald-code-core', async (importOriginal) => {
+// Mock buroventures-harald-code-core and its Config class
+vi.mock('buroventures-harald-code-core', async (importOriginal) => {
   const actualCore =
-    await importOriginal<typeof import('@harald-code/harald-code-core')>();
+    await importOriginal<typeof import('buroventures-harald-code-core')>();
   const ConfigClassMock = vi
     .fn()
     .mockImplementation((optionsPassedToConstructor) => {
@@ -239,7 +239,7 @@ vi.mock('./config/auth.js', () => ({
 
 const mockedCheckForUpdates = vi.mocked(checkForUpdates);
 const { isGitRepository: mockedIsGitRepository } = vi.mocked(
-  await import('@harald-code/harald-code-core'),
+  await import('buroventures-harald-code-core'),
 );
 
 vi.mock('node:child_process');

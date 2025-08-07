@@ -9,9 +9,9 @@ import { getInstallationInfo, PackageManager } from './installationInfo.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { isGitRepository } from '@harald-code/harald-code-core';
+import { isGitRepository } from 'buroventures-harald-code-core';
 
-vi.mock('@harald-code/harald-code-core', () => ({
+vi.mock('buroventures-harald-code-core', () => ({
   isGitRepository: vi.fn(),
 }));
 

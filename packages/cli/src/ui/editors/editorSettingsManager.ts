@@ -8,7 +8,7 @@ import {
   allowEditorTypeInSandbox,
   checkHasEditorType,
   type EditorType,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 export interface EditorDisplay {
   name: string;

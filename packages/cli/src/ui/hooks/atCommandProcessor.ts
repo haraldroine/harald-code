@@ -12,7 +12,7 @@ import {
   getErrorMessage,
   isNodeError,
   unescapePath,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import {
   HistoryItem,
   IndividualToolCallDisplay,

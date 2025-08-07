@@ -11,7 +11,7 @@ import {
   CommandKind,
   MessageActionReturn,
 } from './types.js';
-import { ApiKeyRotationManager } from '@harald-code/harald-code-core';
+import { ApiKeyRotationManager } from 'buroventures-harald-code-core';
 import { SettingScope } from '../../config/settings.js';
 
 const COLOR_GREEN = '\u001b[32m';

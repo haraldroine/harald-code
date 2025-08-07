@@ -7,7 +7,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { Colors } from '../colors.js';
-import { ApprovalMode } from '@harald-code/harald-code-core';
+import { ApprovalMode } from 'buroventures-harald-code-core';
 
 interface AutoAcceptIndicatorProps {
   approvalMode: ApprovalMode;

@@ -14,7 +14,7 @@ import {
   ToolExecuteConfirmationDetails,
   ToolMcpConfirmationDetails,
   Config,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import {
   RadioButtonSelect,
   RadioSelectItem,

@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { useInput } from 'ink';
-import { ApprovalMode, type Config } from '@harald-code/harald-code-core';
+import { ApprovalMode, type Config } from 'buroventures-harald-code-core';
 
 export interface UseAutoAcceptIndicatorArgs {
   config: Config;

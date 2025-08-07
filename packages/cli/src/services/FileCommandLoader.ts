@@ -13,7 +13,7 @@ import {
   Config,
   getProjectCommandsDir,
   getUserCommandsDir,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import { ICommandLoader } from './types.js';
 import {
   CommandContext,

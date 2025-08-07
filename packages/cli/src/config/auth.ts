@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AuthType } from '@harald-code/harald-code-core';
+import { AuthType } from 'buroventures-harald-code-core';
 import { loadEnvironment } from './settings.js';
 import { persistCerebrasConfig } from '../utils/envPersistence.js';
 

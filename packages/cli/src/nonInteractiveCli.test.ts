@@ -12,15 +12,15 @@ import {
   shutdownTelemetry,
   GeminiEventType,
   ServerGeminiStreamEvent,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import { Part } from '@google/genai';
 import { runNonInteractive } from './nonInteractiveCli.js';
 import { vi } from 'vitest';
 
 // Mock core modules
-vi.mock('@harald-code/harald-code-core', async (importOriginal) => {
+vi.mock('buroventures-harald-code-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@harald-code/harald-code-core')>();
+    await importOriginal<typeof import('buroventures-harald-code-core')>();
   return {
     ...original,
     executeToolCall: vi.fn(),

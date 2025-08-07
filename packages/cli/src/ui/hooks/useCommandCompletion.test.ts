@@ -13,7 +13,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
 import { CommandContext, SlashCommand } from '../commands/types.js';
-import { Config, FileDiscoveryService } from '@harald-code/harald-code-core';
+import { Config, FileDiscoveryService } from 'buroventures-harald-code-core';
 import { useTextBuffer } from '../components/shared/text-buffer.js';
 
 describe('useCommandCompletion', () => {

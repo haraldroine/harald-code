@@ -7,7 +7,7 @@
 import {
   ToolCallConfirmationDetails,
   ToolResultDisplay,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 // Only defining the state enum needed by the UI
 export enum StreamingState {

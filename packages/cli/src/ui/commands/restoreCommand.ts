@@ -12,7 +12,7 @@ import {
   type SlashCommandActionReturn,
   CommandKind,
 } from './types.js';
-import { Config } from '@harald-code/harald-code-core';
+import { Config } from 'buroventures-harald-code-core';
 
 async function restoreAction(
   context: CommandContext,

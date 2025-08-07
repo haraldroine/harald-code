@@ -17,7 +17,7 @@ import {
   uiTelemetryService,
   SessionMetrics,
   ModelMetrics,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 // --- Interface Definitions ---
 

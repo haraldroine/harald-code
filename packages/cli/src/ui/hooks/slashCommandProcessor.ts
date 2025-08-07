@@ -16,7 +16,7 @@ import {
   logSlashCommand,
   SlashCommandEvent,
   ToolConfirmationOutcome,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import { useSessionStats } from '../contexts/SessionContext.js';
 import {
   Message,

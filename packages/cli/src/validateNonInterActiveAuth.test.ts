@@ -9,7 +9,7 @@ import {
   validateNonInteractiveAuth,
   NonInteractiveConfig,
 } from './validateNonInterActiveAuth.js';
-import { AuthType } from '@harald-code/harald-code-core';
+import { AuthType } from 'buroventures-harald-code-core';
 import * as auth from './config/auth.js';
 
 describe('validateNonInterActiveAuth', () => {

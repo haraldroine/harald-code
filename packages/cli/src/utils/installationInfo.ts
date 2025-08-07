@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { isGitRepository } from '@harald-code/harald-code-core';
+import { isGitRepository } from 'buroventures-harald-code-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as childProcess from 'child_process';
@@ -129,7 +129,7 @@ export function getInstallationInfo(
       };
     }
     if (realPath.includes('/.bun/bin')) {
-      const updateCommand = 'bun add -g @harald-code/harald-code@latest';
+      const updateCommand = 'bun add -g buroventures-harald-code@latest';
       return {
         packageManager: PackageManager.BUN,
         isGlobal: true,
@@ -162,7 +162,7 @@ export function getInstallationInfo(
     }
 
     // Assume global npm
-    const updateCommand = 'npm install -g @harald-code/harald-code@latest';
+    const updateCommand = 'npm install -g buroventures-harald-code@latest';
     return {
       packageManager: PackageManager.NPM,
       isGlobal: true,

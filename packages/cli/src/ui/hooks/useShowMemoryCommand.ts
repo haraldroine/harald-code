@@ -5,7 +5,7 @@
  */
 
 import { Message, MessageType } from '../types.js';
-import { Config } from '@harald-code/harald-code-core';
+import { Config } from 'buroventures-harald-code-core';
 import { LoadedSettings } from '../../config/settings.js';
 
 export function createShowMemoryAction(

@@ -13,7 +13,7 @@ import {
   isGenericQuotaExceededError,
   isApiError,
   isStructuredError,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 // Free Tier message functions
 const getRateLimitErrorMessageGoogleFree = (

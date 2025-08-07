@@ -14,11 +14,11 @@ import {
   getErrorMessage,
   loadServerHierarchicalMemory,
   type FileDiscoveryService,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
-vi.mock('@harald-code/harald-code-core', async (importOriginal) => {
+vi.mock('buroventures-harald-code-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@harald-code/harald-code-core')>();
+    await importOriginal<typeof import('buroventures-harald-code-core')>();
   return {
     ...original,
     getErrorMessage: vi.fn((error: unknown) => {

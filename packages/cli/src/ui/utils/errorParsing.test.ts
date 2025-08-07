@@ -11,7 +11,7 @@ import {
   UserTierId,
   DEFAULT_GEMINI_FLASH_MODEL,
   isProQuotaExceededError,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 
 describe('parseAndFormatApiError', () => {
   const _enterpriseMessage =

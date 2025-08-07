@@ -17,9 +17,9 @@ import {
 
 const mockIsBinary = vi.hoisted(() => vi.fn());
 const mockShellExecutionService = vi.hoisted(() => vi.fn());
-vi.mock('@harald-code/harald-code-core', async (importOriginal) => {
+vi.mock('buroventures-harald-code-core', async (importOriginal) => {
   const original =
-    await importOriginal<typeof import('@harald-code/harald-code-core')>();
+    await importOriginal<typeof import('buroventures-harald-code-core')>();
   return {
     ...original,
     ShellExecutionService: { execute: mockShellExecutionService },
@@ -40,7 +40,7 @@ import {
   type GeminiClient,
   type ShellExecutionResult,
   type ShellOutputEvent,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';

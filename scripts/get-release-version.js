@@ -57,6 +57,7 @@ export function getNightlyTagName() {
 export function getReleaseVersion() {
   const isNightly = process.env.IS_NIGHTLY === 'true';
   const manualVersion = process.env.MANUAL_VERSION;
+  const gitRef = process.env.GITHUB_REF;
 
   let releaseTag;
 
@@ -66,6 +67,10 @@ export function getReleaseVersion() {
   } else if (manualVersion) {
     console.error(`Using manual version: ${manualVersion}`);
     releaseTag = manualVersion;
+  } else if (gitRef && gitRef.startsWith('refs/tags/')) {
+    // Extract version from Git tag (e.g., refs/tags/v1.0.0 -> v1.0.0)
+    releaseTag = gitRef.replace('refs/tags/', '');
+    console.error(`Using Git tag version: ${releaseTag}`);
   } else {
     throw new Error(
       'Error: No version specified and this is not a nightly release.',

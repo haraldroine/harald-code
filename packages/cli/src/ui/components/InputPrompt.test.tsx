@@ -7,7 +7,7 @@
 import { render } from 'ink-testing-library';
 import { InputPrompt, InputPromptProps } from './InputPrompt.js';
 import type { TextBuffer } from './shared/text-buffer.js';
-import { Config } from '@harald-code/harald-code-core';
+import { Config } from 'buroventures-harald-code-core';
 import * as path from 'path';
 import {
   CommandContext,

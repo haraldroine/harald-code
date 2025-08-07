@@ -15,7 +15,7 @@ import {
   SETTINGS_DIRECTORY_NAME,
 } from '../config/settings.js';
 import { promisify } from 'util';
-import { Config, SandboxConfig } from '@harald-code/harald-code-core';
+import { Config, SandboxConfig } from 'buroventures-harald-code-core';
 
 const execAsync = promisify(exec);
 

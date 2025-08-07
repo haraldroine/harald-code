@@ -88,8 +88,10 @@ Automatically runs daily at midnight UTC for nightly builds.
 
 ### Required Secrets
 Add these to your GitHub repository secrets:
-- `NPM_TOKEN`: NPM access token for publishing
+- `NPM_TOKEN`: NPM access token for publishing (generate at npmjs.com/settings/tokens)
 - `OPENAI_API_KEY`: For integration tests (optional)
+
+**⚠️ Security Note**: Never commit NPM tokens or API keys to your repository. Always use GitHub secrets or environment variables.
 
 ## Installation Detection
 
@@ -177,13 +179,27 @@ Locally installed. Please update via your project's package.json.
 - Test thoroughly before publishing
 
 ### Security
-- Rotate npm tokens regularly
-- Use least-privilege access tokens
-- Monitor for unauthorized package changes
-- Enable 2FA on npm account
+- **Never commit secrets**: NPM tokens, API keys should never be in git history
+- **Use GitHub secrets**: Store sensitive tokens in repository settings
+- **Rotate tokens regularly**: Generate new NPM tokens periodically
+- **Least-privilege access**: Use automation tokens with minimal required permissions
+- **Monitor packages**: Watch for unauthorized changes to published packages
+- **Enable 2FA**: Protect your npm account with two-factor authentication
+- **Gitignore sensitive files**: Ensure setup scripts with tokens are excluded
 
 ### User Experience
 - Clear update messages
 - Respect user preferences
 - Graceful failure handling
 - Minimal network impact
+
+## Automated Release System
+
+Harald Code now features a fully automated Git → NPM release system. See [Automated Releases Guide](automated-releases.md) for complete documentation.
+
+### Quick Release
+```bash
+./scripts/release.sh
+```
+
+This single command handles version updates, Git tagging, and triggers automated NPM publishing via GitHub Actions.

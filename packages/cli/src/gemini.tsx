@@ -38,7 +38,7 @@ import {
   logUserPrompt,
   AuthType,
   getOauthClient,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import { validateAuthMethod } from './config/auth.js';
 import { setMaxSizedBoxDebugging } from './ui/components/shared/MaxSizedBox.js';
 import { validateNonInteractiveAuth } from './validateNonInterActiveAuth.js';

@@ -20,14 +20,14 @@ import {
   Config,
   Config as ActualConfigType,
   ApprovalMode,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import { useInput, type Key as InkKey } from 'ink';
 
 vi.mock('ink');
 
-vi.mock('@harald-code/harald-code-core', async () => {
+vi.mock('buroventures-harald-code-core', async () => {
   const actualServerModule = (await vi.importActual(
-    '@harald-code/harald-code-core',
+    'buroventures-harald-code-core',
   )) as Record<string, unknown>;
   return {
     ...actualServerModule,

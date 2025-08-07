@@ -8,7 +8,7 @@ import {
   Config,
   getErrorMessage,
   getMCPServerPrompts,
-} from '@harald-code/harald-code-core';
+} from 'buroventures-harald-code-core';
 import {
   CommandContext,
   CommandKind,
