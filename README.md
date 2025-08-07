@@ -4,7 +4,7 @@
 
 > ## 👋 About the Creator
 > 
-> **Harald Code** is created and maintained by **[Harald Roine](https://www.linkedin.com/in/haraldroine/)**.
+> **Harald Code** is created by **[Harald Roine](https://www.linkedin.com/in/haraldroine/)**.
 > 
 > ### 🚀 Need Help Implementing AI in Your Business?
 > 
