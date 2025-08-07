@@ -1,6 +1,6 @@
 {
   "name": "buroventures-harald-code",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Harald Code - AI-powered coding assistant CLI",
   "keywords": [
     "ai",
@@ -47,7 +47,7 @@
     "@google/genai": "1.9.0",
     "@iarna/toml": "^2.2.5",
     "@types/update-notifier": "^6.0.8",
-    "buroventures-harald-code-core": "^0.0.5",
+    "buroventures-harald-code-core": "^0.0.6",
     "command-exists": "^1.2.9",
     "diff": "^7.0.0",
     "dotenv": "^17.1.0",
