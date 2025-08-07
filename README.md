@@ -2,6 +2,17 @@
 
 ![Harald Code Screenshot](assets/harald-code-screenshot.png)
 
+> ## 👋 About the Creator
+> 
+> **Harald Code** is created and maintained by **[Harald Roine](https://www.linkedin.com/in/haraldroine/)**.
+> 
+> ### 🚀 Need Help Implementing AI in Your Business?
+> 
+> If you're looking to leverage AI for business growth and want expert guidance on implementation strategies:
+> 
+> - **Connect on LinkedIn**: [Harald Roine](https://www.linkedin.com/in/haraldroine/)
+> - **Watch our business growth video**: [AI Implementation for Business Growth](https://go.buroventures.com/b2b-offer-vsl)
+
 [![GitHub Release](https://img.shields.io/github/v/release/haraldroine/harald-code)](https://github.com/haraldroine/harald-code/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
