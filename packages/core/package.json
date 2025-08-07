@@ -1,8 +1,16 @@
 {
   "name": "buroventures-harald-code-core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Harald Code Core - Core functionality for AI-powered coding assistant",
-  "keywords": ["ai", "coding", "assistant", "core", "development", "gemini", "cerebras"],
+  "keywords": [
+    "ai",
+    "coding",
+    "assistant",
+    "core",
+    "development",
+    "gemini",
+    "cerebras"
+  ],
   "author": "Harald Roine",
   "license": "Apache-2.0",
   "homepage": "https://github.com/haraldroine/harald-code#readme",
