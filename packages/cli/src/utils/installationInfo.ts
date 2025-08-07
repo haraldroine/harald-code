@@ -8,6 +8,7 @@ import { isGitRepository } from '@harald-code/harald-code-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as childProcess from 'child_process';
+import { getGitUpdateInstructions } from '../ui/utils/gitUpdateCheck.js';
 
 export enum PackageManager {
   NPM = 'npm',
@@ -53,8 +54,8 @@ export function getInstallationInfo(
       return {
         packageManager: PackageManager.UNKNOWN, // Not managed by a package manager in this sense
         isGlobal: false,
-        updateMessage:
-          'Running from a local git clone. Please update with "git pull".',
+        updateCommand: 'git pull',
+        updateMessage: getGitUpdateInstructions(),
       };
     }
 
@@ -128,7 +129,7 @@ export function getInstallationInfo(
       };
     }
     if (realPath.includes('/.bun/bin')) {
-      const updateCommand = 'bun add -g @qwen-code/qwen-code@latest';
+      const updateCommand = 'bun add -g @harald-code/harald-code@latest';
       return {
         packageManager: PackageManager.BUN,
         isGlobal: true,
@@ -161,7 +162,7 @@ export function getInstallationInfo(
     }
 
     // Assume global npm
-    const updateCommand = 'npm install -g @qwen-code/qwen-code@latest';
+    const updateCommand = 'npm install -g @harald-code/harald-code@latest';
     return {
       packageManager: PackageManager.NPM,
       isGlobal: true,

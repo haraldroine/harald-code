@@ -7,6 +7,7 @@
 import updateNotifier, { UpdateInfo } from 'update-notifier';
 import semver from 'semver';
 import { getPackageJson } from '../../utils/package.js';
+import { checkForGitUpdates, GitUpdateObject } from './gitUpdateCheck.js';
 
 export const FETCH_TIMEOUT_MS = 2000;
 
@@ -46,6 +47,23 @@ export async function checkForUpdates(): Promise<UpdateObject | null> {
     }
     const packageJson = await getPackageJson();
     if (!packageJson || !packageJson.name || !packageJson.version) {
+      return null;
+    }
+
+    // Check if this is a private package (not published to npm)
+    if (packageJson.private === true) {
+      // Use Git-based update checking for private packages
+      const gitUpdate = await checkForGitUpdates();
+      if (gitUpdate) {
+        return {
+          message: gitUpdate.message,
+          update: {
+            current: gitUpdate.update.current,
+            latest: gitUpdate.update.latest,
+            type: gitUpdate.update.type
+          } as UpdateInfo
+        };
+      }
       return null;
     }
 

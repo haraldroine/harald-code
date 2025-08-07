@@ -15,10 +15,10 @@ import { MessageType } from '../types.js';
 
 export const docsCommand: SlashCommand = {
   name: 'docs',
-  description: 'open full Qwen Code documentation in your browser',
+  description: 'open full Harald Code documentation in your browser',
   kind: CommandKind.BUILT_IN,
   action: async (context: CommandContext): Promise<void> => {
-    const docsUrl = 'https://github.com/haraldroine/cerebras-code';
+    const docsUrl = 'https://github.com/haraldroine/harald-code';
 
     if (process.env.SANDBOX && process.env.SANDBOX !== 'sandbox-exec') {
       context.ui.addItem(

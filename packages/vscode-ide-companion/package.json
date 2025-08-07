@@ -3,11 +3,11 @@
   "displayName": "Harald Code Companion",
   "description": "Enable Harald Code with direct access to your VS Code workspace.",
   "version": "0.0.4",
-  "publisher": "cerebras",
+  "publisher": "harald-code",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haraldroine/cerebras-code.git",
+    "url": "https://github.com/haraldroine/harald-code.git",
     "directory": "packages/vscode-ide-companion"
   },
   "engines": {
@@ -21,7 +21,7 @@
   "keywords": [
     "harald-code",
     "harald code",
-    "cerebras",
+    "harald-code",
     "harald code",
     "cli",
     "ide integration",

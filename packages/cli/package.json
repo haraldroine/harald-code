@@ -1,12 +1,19 @@
 {
   "name": "@harald-code/harald-code",
   "version": "0.0.4",
-  "description": "Harald Code",
+  "description": "Harald Code - AI-powered coding assistant CLI",
+  "keywords": ["ai", "coding", "assistant", "cli", "development", "gemini", "cerebras"],
+  "author": "Harald Roine",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/haraldroine/harald-code#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/haraldroine/cerebras-code.git"
+    "url": "git+https://github.com/haraldroine/harald-code.git"
   },
-  "private": true,
+  "bugs": {
+    "url": "https://github.com/haraldroine/harald-code/issues"
+  },
+  "private": false,
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -30,7 +37,7 @@
     "sandboxImageUri": "ghcr.io/haraldroine/harald-code:0.0.4"
   },
   "dependencies": {
-    "@harald-code/harald-code-core": "file:../core",
+    "@harald-code/harald-code-core": "^0.0.4",
     "@google/genai": "1.9.0",
     "@iarna/toml": "^2.2.5",
     "@types/update-notifier": "^6.0.8",

@@ -1,6 +1,6 @@
 # Harald Code Companion
 
-The Harald Code Companion extension seamlessly integrates [Harald Code](https://github.com/haraldroine/cerebras-code) into your VS Code environment. This integration enables Harald Code to access active information like your open files.
+The Harald Code Companion extension seamlessly integrates [Harald Code](https://github.com/haraldroine/harald-code) into your VS Code environment. This integration enables Harald Code to access active information like your open files.
 
 # Features
 
@@ -17,4 +17,4 @@ To use this extension, you'll need:
 
 # Terms of Service and Privacy Notice
 
-By installing this extension, you agree to the [Terms of Service](https://github.com/haraldroine/cerebras-code/blob/main/docs/tos-privacy.md).
+By installing this extension, you agree to the [Terms of Service](https://github.com/haraldroine/harald-code/blob/main/docs/tos-privacy.md).
