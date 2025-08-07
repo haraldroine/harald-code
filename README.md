@@ -44,6 +44,12 @@ Ensure you have Node.js version 20 or higher installed.
 curl -qL https://www.npmjs.com/install.sh | sh
 ```
 
+### Install from npm (Recommended)
+
+```bash
+npm install -g buroventures-harald-code@latest
+```
+
 ### Install from source
 
 ```bash
